@@ -11,7 +11,7 @@ header {
 }
 
 #section-api-creds {
-    background-color: white;
+    background-color: whitesmoke;
     border: 1px solid blue;
 }
 
@@ -20,7 +20,7 @@ header {
 }
 
 #section-filter-logs {
-    background-color: white;
+    background-color: whitesmoke;
     border: 1px solid blue;
 }
 
@@ -41,6 +41,8 @@ header {
 footer {
     background-color: lightslategray;
 }
+
+/** Typography **/
 
 h1 {
     font-size: 4vh;
@@ -70,4 +72,16 @@ footer {
 
 .row {
     border: 1px solid red;
+}
+
+/** Form Styles **/
+
+.space-vertically {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.vertically-spaced-item {
+    flex: auto;
 }

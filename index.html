@@ -19,24 +19,140 @@
     <div id="app-container" class="container-fluid">
         <div class="row justify-content-around">
             <!-- API Credentials Section -->
-            <section id="section-api-creds" class="col-11 col-md-5 m-2 rounded">                                
-                <h2>API Section</h2>               
+            <section id="section-api-creds" class="col-11 col-lg-5 m-2 py-2 rounded">                
+                <h2 class="text-center">Enter AWS API Credentials</h2>
+                <div class="row align-items-center">
+                    <div class="col-md-9 text-center text-md-left">
+                        <p>Enter you AWS credentials below or select a saved option from above. You will need to have read access to an S3 bucket, take a look at the help for
+                            more information. Credentials are <u>never</u> transmitted to our servers, saved credentials are stored in your browser.</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <button class="btn btn-info btn-lg rounded-circle">Help..</button>
+                    </div>
+                </div>     
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-secondary">Load Saved</button>
+                    <button type="button" class="btn btn-secondary"><small>Clear</small></button>                         
+                </div>
+                <button class="btn btn-warning float-right">Load DEMO</button>
+                             
+                <!-- AWS Credentials Form -->
+                <form id="form-api-creds" class="mt-3">
+                    <div class="form-group">                            
+                        <input type="text" class="form-control form-control-lg" id="access-key-id" aria-describedby="key-id-help" placeholder="Access Key ID" required>
+                        <small id="key-id-help" class="form-text text-muted">Your AWS API Key ID</small>
+                    </div>
+                    <div class="form-group">                            
+                        <input type="password" class="form-control form-control-lg" id="access-key-secret" aria-describedby="secret-help" placeholder="Secret" required>
+                        <small id="secret-help" class="form-text text-muted">The key's secret</small>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">                                
+                            <select class="form-control" id="aws-region-select" aria-describedby="aws-region-help" required>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                            <small id="aws-region-help" class="form-text text-muted">Region in which your S3 bucket is hosted.</small>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" id="bucket-name" aria-describedby="bucket-name-help" placeholder="Bucket Name" required>
+                            <small id="bucket-name-help" class="form-text text-muted">Name of the bucket containing the log files.</small>
+                        </div>                            
+                    </div>                        
+                    
+                                     
+                </form>
+                <div class="row align-items-center">
+                    <div class="col">                        
+                        <button type="" class="btn btn-outline-success btn-sm my-3">Connect without saving credentials</button> 
+                    </div>
+                    <div class="col text-right">
+                        <button type="" class="btn btn-success btn-lg my-3">Connect</button>
+                    </div>
+                </div>                                                                                             
             </section>
             <!-- API Connect Message Area -->
-            <div id="message-area-api-connect" class="col col-md-1 my-2">                
+            <div id="message-area-api-connect" class="col col-lg-1 my-2">                
                 <h3>API Message Area</h3>
             </div>           
             <!-- Filter Log Files Section -->
-            <section id="section-filter-logs" class="col-11 col-md-5 m-2 rounded">                                
-                <h2>Filter Section</h2>                
+            <section id="section-filter-logs" class="col-11 col-lg-5 m-2 py-2 rounded">                                                        
+                <div class="text-center">
+                    <h2>Filter Log Files</h2>
+                    <small>Select type and filter by date or use the preset options.</small>
+                </div>                               
+                <!-- Filter Log Files Form -->
+                <form id="form-filter-log-files">
+                    <fieldset class="form-group border p-2 text-center">
+                        <legend class="text-left">Select Log Type</legend>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" name="log-file-type" id="type-s3-log-file" value="s3Log" required>
+                            <label class="custom-control-label" for="type-s3-log-file">S3 Access Log (.txt)</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" name="log-file-type" id="type-cloudfront-log-file" value="cfLog" required>
+                            <label class="custom-control-label" for="type-cloudfront-log-file">CloudFront Access Log (.gz)</label>
+                        </div>
+                    </fieldset>
+                    <div class="row">
+                        <fieldset class="col form-group border mx-2">
+                            <legend>Filter By Date</legend>
+                            <div class="form-group">
+                                <label class="form-text text-muted" for="date-min">From:</label>
+                                <input class="form-control" type="date" name="date-min" id="date-min" min="" max="">
+                                <p class="text-right"><small >Earliest: </small></p> 
+                            </div>
+                            <div class="form-group">
+                                <label class="form-text text-muted" for="date-max">To:</label>                                                    
+                                <input class="form-control" type="date" name="date-max" id="date-max" min="" max="">
+                                <p class="text-right"><small >Latest: </small></p> 
+                            </div>                                                   
+                        </fieldset>
+                        <fieldset class="col form-group border mx-2">
+                            <legend>Preset Filters</legend>
+                            <div class="space-vertically ml-3">
+                               <div class="vertically-spaced-item custom-control custom-radio py-1">
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter1" value="filter1">
+                                    <label class="custom-control-label" for="filter1">filter1</label>
+                                </div>
+                                <div class="vertically-spaced-item custom-control custom-radio py-1">
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter2" value="filter2">
+                                    <label class="custom-control-label" for="filter2">filter2</label>
+                                </div>
+                                <div class="vertically-spaced-item custom-control custom-radio py-1">
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter3" value="filter3">
+                                    <label class="custom-control-label" for="filter3">filter3</label>
+                                </div>
+                                <div class="vertically-spaced-item custom-control custom-radio py-1">
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter4" value="filter4">
+                                    <label class="custom-control-label" for="filter4">filter4</label>
+                                </div>                                
+                            </div>                            
+                        </fieldset>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <small>No. of records selected: </small>
+                        </div>
+                        <div class="col-4 text-center">
+                            <button type="" class="btn btn-success btn-lg">Go!</button>
+                        </div>
+                    </div>
+                    
+                                        
+                </form>                
             </section>            
         </div>
+        <!-- Load Logs Message Area -->
         <div id="message-area-load-logs" class="row align-items-center">
             <div class="col-9 m-2">
                 <h3>Load Logs Message Area</h3>
             </div>
             <div class="col m-2">
-                <button>Change Filter Button</button>
+                <button type="button" class="btn btn-warning">Change Filter</button>
             </div>            
         </div>        
         <!-- Visualised Data Section-->
@@ -66,25 +182,23 @@
                 <h2>Chart8</h2>
             </div>
         </section>
+        <!-- Site Footer -->
         <footer class="row justify-content-center align-items-center">
             <div class="col-10">
                 <div class="row justify-content-center my-2">
-                    <div class="col col-4">
-                        <button>RESET</button>
+                    <div class="col col-4">                                               
+                        <button type="reset" class="btn btn-danger" form="form-api-creds">RESET</button>
                     </div>
                     <div class="col col-4">
-                        <button>Change Filter</button>
+                        <button type="button" class="btn btn-warning">Change Filter</button>
                     </div>
                 </div>
-            </div>
+            </div>            
             <div class="col-11 col-md-2 text-center">
                 &copy; David Bland 2019
-            </div>
-            
-        </footer>        
+            </div>            
+        </footer>       
     </div>
-    <!-- Site Footer -->
-    
     <!-- Modals -->
     
 </body>
