@@ -12,6 +12,80 @@
     <link rel="stylesheet" href="./styles/main.css" />
 </head>
 <body>
-    <h1>Welcome to The S3 Log Analyser</h1>
+    <!-- Site Header -->
+    <header>
+        <h1 class="text-center">The S3 Log Analyser</h1>
+    </header>
+    <div id="app-container" class="container-fluid">
+        <div class="row justify-content-around">
+            <!-- API Credentials Section -->
+            <section id="section-api-creds" class="col-11 col-md-5 m-2 rounded">                                
+                <h2>API Section</h2>               
+            </section>
+            <!-- API Connect Message Area -->
+            <div id="message-area-api-connect" class="col col-md-1 my-2">                
+                <h3>API Message Area</h3>
+            </div>           
+            <!-- Filter Log Files Section -->
+            <section id="section-filter-logs" class="col-11 col-md-5 m-2 rounded">                                
+                <h2>Filter Section</h2>                
+            </section>            
+        </div>
+        <div id="message-area-load-logs" class="row align-items-center">
+            <div class="col-9 m-2">
+                <h3>Load Logs Message Area</h3>
+            </div>
+            <div class="col m-2">
+                <button>Change Filter Button</button>
+            </div>            
+        </div>        
+        <!-- Visualised Data Section-->
+        <section id="section-visualise-data" class="row">
+            <div id="chart1" class="col-12 chart">                
+                <h2>Chart1</h2>
+            </div>
+            <div id="chart2" class="col-md-4 chart">                
+                <h2>Chart2</h2>
+            </div>
+            <div id="chart3" class="col-md-4 chart">                
+                <h2>Chart3</h2>
+            </div>
+            <div id="chart4" class="col-md-4 chart">                
+                <h2>Chart4</h2>
+            </div>
+            <div id="chart5" class="col-12 chart">                
+                <h2>Chart5</h2>
+            </div>
+            <div id="chart6" class="col-md-4 chart">                
+                <h2>Chart6</h2>
+            </div>
+            <div id="chart7" class="col-md-4 chart">                
+                <h2>Chart7</h2>
+            </div>
+            <div id="chart8" class="col-md-4 chart">                
+                <h2>Chart8</h2>
+            </div>
+        </section>
+        <footer class="row justify-content-center align-items-center">
+            <div class="col-10">
+                <div class="row justify-content-center my-2">
+                    <div class="col col-4">
+                        <button>RESET</button>
+                    </div>
+                    <div class="col col-4">
+                        <button>Change Filter</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-11 col-md-2 text-center">
+                &copy; David Bland 2019
+            </div>
+            
+        </footer>        
+    </div>
+    <!-- Site Footer -->
+    
+    <!-- Modals -->
+    
 </body>
 </html>

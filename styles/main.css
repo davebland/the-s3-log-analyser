@@ -1,3 +1,73 @@
+/** MAIN Styles for App **/
+
+/** Colours **/
+
+header {
+    background-color: lightslategray;
+}
+
+#app-container {
+    background-color: lightgrey;
+}
+
+#section-api-creds {
+    background-color: white;
+    border: 1px solid blue;
+}
+
+#message-area-api-connect {
+    border: 1px solid blue;
+}
+
+#section-filter-logs {
+    background-color: white;
+    border: 1px solid blue;
+}
+
+#message-area-load-logs {
+
+}
+
+#section-visualise-data {
+    border: 1px solid blue;
+    background-color: darkgray;
+}
+
+.chart {
+    background-color: white;
+    border: 10px solid darkgray;
+}
+
+footer {
+    background-color: lightslategray;
+}
+
 h1 {
-    color: red;
+    font-size: 4vh;
+}
+
+/** Container Size and Position **/
+
+header {
+    position: fixed;
+    top: 0;    
+    width: 100vw;
+    height: 6vh;
+    z-index: 100;
+}
+
+#app-container {
+    margin-top: 6vh;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;    
+    width: 100vw;
+}
+
+/** TEMP **/
+
+.row {
+    border: 1px solid red;
 }
