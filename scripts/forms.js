@@ -135,10 +135,12 @@ function submitCredsForm(apiCreds) {
         $('#message-area-api-connect').append(`<p>${success}</p>`);
         // Enable filter form
         enableFilterForm(true);
-    }, function(error) {
-        // On error write details to message area
-        $('#message-area-api-connect').append(`<p>ERROR: ${error.code} - ${error.message}</p>`);
-        // Enable creds form again & clear message area
+    }).catch (function(error) {
+        // On error write details to modal message area
+        $('#modal-error-message-area').append(`<p>ERROR: ${error.code} - ${error.message}</p>`);
+        // Display error modal
+        $('#modal-error-messages').modal();
+        // Enable creds form again & clear page message area
         enableCredsForm(true);
         clearApiMessageArea();       
     });
@@ -195,16 +197,3 @@ function checkSavedCredsButtonState() {
 }
 
 /* DEMO CREDENTIALS */
-
-//TEMP
-
-function awsListObjects() {
-    result = new Promise(function(resolve, reject) {
-        if(awsCreds.keyId == 'test') {
-            resolve('Creds Recieved');
-        } else {
-            reject({ code: 'Wrong creds', message: 'error details'});
-        };
-    });
-    return result;
-}

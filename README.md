@@ -33,6 +33,7 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 - Libraries
     - Bootstrap (4.3.1)
     - jQuery (3.4.1)
+    - AWS SDK for JS, S3 service only (2.461)
 
 ## Testing
 
@@ -42,7 +43,7 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 
 ## Deployment
 
-Scripts loaded after HTML via defer attribute.
+Scripts loaded after HTML via defer attribute. All JS & CSS minified for size.
 
 ## Credits
 
