@@ -6,42 +6,84 @@
 
 // Application wide variables
 var awsObjectList = [];
+var errorStack = [];
+var listLoopCounter = 0;
 
 // Enable AWS console logger
 AWS.config.logger = console;
 
-// AWS List Objects (first call to AWS) 
-function awsListObjects(awsContinuationToken) {
-    // Set AWS creds globally using awsCreds object
+// Set AWS config and service object globally
+function setupAws() {
+    // Set creds awsCreds object
     AWS.config.credentials = new AWS.Credentials({accessKeyId: awsCreds.keyId, secretAccessKey: awsCreds.keySecret});
-
     // Create S3 service object with region and bucket name from awsCreds
-    let s3 = new AWS.S3({region: awsCreds.awsRegion, params: {Bucket: awsCreds.bucketName}});                                    
+    return new AWS.S3({region: awsCreds.awsRegion, params: {Bucket: awsCreds.bucketName}});
+}
 
-    // Set additional S3 parameters including continuation token if available          
-    let s3Options = {
-        MaxKeys: 10                
-    };
-    if (awsContinuationToken) {
-        s3Options.ContinuationToken = awsContinuationToken;
+// AWS List Objects (first call to AWS) 
+function awsListObjects() {
+    // Get an s3 service option setup ready to go
+    let s3 = setupAws();
+    
+    // Create function to call api and list object
+    function listObjectLoop(ContinuationToken) {
+        // Set additional S3 parameters including continuation token if available          
+        let s3Options = {
+            MaxKeys: 10                
+        };
+        if (ContinuationToken) {
+            s3Options.ContinuationToken = awsContinuationToken;
+        }
+
+        s3.listObjectsV2(s3Options, function(s3ListError, s3ListSuccess) {
+            if (s3ListError) {
+                // If list objects api call fails then add error to stack
+                errorStack.push({type: 'AWS API', errorCode: s3ListError.code, errorMessage: s3ListError.message});
+            } else {
+                // On successful response add the contents (bucket objects) to our array
+                addToObjectList(s3ListSuccess.Contents);
+                // If there is more results to get (continuation token) and we haven't hit the loop safety limit then re-run listObjectLoop
+                if (s3ListSuccess.ContinuationToken && listLoopCounter < 5) {
+                    listObjectLoop(ContinuationToken);
+                    listLoopCounter++;
+                } else {
+                    //listObjectLoopComplete();
+                }
+            }
+        });
+        
     }
 
-    console.log('AWS Options: ');
-    console.dir(s3Options);
+    function listObjectLoopComplete() {
+        if (errorStack.length > 0) {
+        // If any errors then return promise as rejected
+            //return Promise.reject();
+        } else {
+            //return Promise.resolve('Listing success, no. objects = ' + awsObjectList.length);
+        } 
+    }
 
+    // Call api for first time
+    //listObjectLoop();
+
+    // Work through the object list to generate dates
+    //generateObjectDates();
+
+    
+
+    /*
     // Create promise to return to handler
-    return new Promise(function(resolve, reject) {        
-        // Call S3 to list bucket objects & handle promise result
-        s3.listObjectsV2(s3Options).promise().then(function(s3ListSuccess) {
-            // On successful response add the contents (bucket objects) to our array
-            addToObjectList(s3ListSuccess.Contents);
-            resolve('List Success, no objects = ' + awsObjectList.length);
-        }).catch(function(s3ListError) {
-            // If list objects api call is not a success then reject awsListObjectResult promise & add error message to error modal
-            $('#modal-error-message-area').append(`<p>AWS ERROR (list objects): ${s3ListError.code} - ${s3ListError.message}</p>`);
-            reject();
-        });
-    })
+    let listObjectPromise = new Promise(function(resolve, reject) {        
+        if (errorStack.length > 0) {
+            // If any errors then return promise as rejected
+            //reject();
+        } else {
+            //resolve('Listing success, no. objects = ' + awsObjectList.length);
+        }            
+    });
+
+    return listObjectPromise;
+    */
 }
 
 function addToObjectList(s3BucketObjects) {    

@@ -129,21 +129,24 @@ function submitCredsForm(apiCreds) {
     }
     console.table(awsCreds);
 
-    // Invoke API list objects and manage promise
+    // Invoke function to list objects and handle promise
     awsListObjects().then(function(success) {
-        // On list function success
-        $('#message-area-api-connect').append(`<p>${success}</p>`);
-        // Enable filter form
-        enableFilterForm(true);
-    }).catch (function(error) {
-        // On error write details to modal message area
-        $('#modal-error-message-area').append(`<p>ERROR: ${error.code} - ${error.message}</p>`);
-        // Display error modal
-        $('#modal-error-messages').modal();
-        // Enable creds form again & clear page message area
-        enableCredsForm(true);
-        clearApiMessageArea();       
-    });
+            // On list function success
+            $('#message-area-api-connect').append(`<p>${success}</p>`);
+            // Enable filter form
+            enableFilterForm(true);
+        }).catch(function(error) {
+            // On error write errorStack details to modal message area
+            $('#modal-error-message-area').empty();
+            errorStack.forEach(function(error) {            
+                $('#modal-error-message-area').append(`<p>${error.type} ERROR: ${error.code} - ${error.message}</p>`);
+            })        
+            // Display error modal
+            $('#modal-error-messages').modal();
+            // Enable creds form again & clear page message area
+            enableCredsForm(true);
+            clearApiMessageArea();       
+        });
 
     // Save creds
     saveCreds();
