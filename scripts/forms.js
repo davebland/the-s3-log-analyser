@@ -8,6 +8,11 @@
 var awsCreds = {};
 var saveCredsFlag = false;
 
+// Disable standard form submit behavour (reload page)
+$(document).submit(function(event){
+    event.preventDefault();
+});
+
 // Initial functions to run
 checkSavedCredsButtonState();
 getAwsRegions();
@@ -71,6 +76,9 @@ function resetPage() {
     // Clear message areas
     clearApiMessageArea();
     clearLoadLogsMessageArea()
+    // Clear down application wide variable
+    errorStack = [];
+    awsObjectList = [];
 }
 
 /* AWS REGION DROPDOWN */
@@ -132,6 +140,7 @@ function submitCredsForm(apiCreds) {
     // Invoke function to list objects and handle promise
     awsListObjects().then(function(success) {
             // On list function success
+            //console.log(success);
             $('#message-area-api-connect').append(`<p>${success}</p>`);
             // Enable filter form
             enableFilterForm(true);
@@ -139,10 +148,12 @@ function submitCredsForm(apiCreds) {
             // On error write errorStack details to modal message area
             $('#modal-error-message-area').empty();
             errorStack.forEach(function(error) {            
-                $('#modal-error-message-area').append(`<p>${error.type} ERROR: ${error.code} - ${error.message}</p>`);
-            })        
+                $('#modal-error-message-area').append(`<p>${error.type} ERROR: ${error.errorCode} - ${error.errorMessage}</p>`);
+            });
             // Display error modal
             $('#modal-error-messages').modal();
+            // Clear error stack
+            errorStack = [];
             // Enable creds form again & clear page message area
             enableCredsForm(true);
             clearApiMessageArea();       
@@ -151,8 +162,7 @@ function submitCredsForm(apiCreds) {
     // Save creds
     saveCreds();
 
-    // Stop default form submission (don't reload page)
-    return false;
+    return null;
 }
 
 /* SAVED CREDENTIALS */
