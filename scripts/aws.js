@@ -29,41 +29,51 @@ function awsListObjects() {
         let listLoopCounter = 0;
 
         // Create function to call api and list object
-        function listObjectLoop(ContinuationToken) {
+        function listObjectLoop(NextContinuationToken) {
             // Set additional S3 parameters including continuation token if available          
             let s3Options = {
                 MaxKeys: 10                            
             };
-            if (ContinuationToken) {
-                s3Options.ContinuationToken = awsContinuationToken;
+            if (NextContinuationToken) {
+                s3Options.ContinuationToken = NextContinuationToken;
             }
             // Call S3 and handle promise results
             s3.listObjectsV2(s3Options).promise().then(function(s3ListSuccess) {
                     // On successful response add the contents (bucket objects) to our array
                     addToObjectList(s3ListSuccess.Contents);
+                    // Update the count in the message area
+                    updateApiMessageArea(awsObjectList.length);
                     // If there is more results to get (continuation token) and we haven't hit the loop safety limit then re-run listObjectLoop
-                    if (s3ListSuccess.ContinuationToken && listLoopCounter < 5) {
-                        //listObjectLoop(ContinuationToken);
+                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < 1) {
+                        listObjectLoop(s3ListSuccess.NextContinuationToken);
                         listLoopCounter++;   
+                    } else {
+                        console.dir(awsObjectList);
+                        filterObjectsToLogFilesOnly() // Determine no. of each type of log file (.txt .gz)
+                            .then(getObjectDates()) // Find the date of each log file within key name
+                            .then(updateFilterForm()) // Update the filter form with the information
+                            .then(returnPromise())
+                            .catch (function(error) {
+                                console.log('A processing error occured');
+                            })
                     }
-                    returnPromise();
                 }).catch(function(s3ListError) {
                     // If api call fails then add error to stack
                     console.log(s3ListError);
-                    errorStack.push({type: 'AWS API', errorCode: s3ListError.code, errorMessage: s3ListError.message});
+                    errorStack.push({type: 'AWS API', errorMessage: s3ListError.message});
                     returnPromise();
                 });
         }
 
         // Invoke listObjectLoop for the first time
-        listObjectLoop(null) 
-            
+        listObjectLoop(null);
+    
         function returnPromise() {
             // Check for errors and resolve
             if (errorStack.length > 0) {
                 reject();
             } else {
-                resolve('Listing success, no. objects = ' + awsObjectList.length);
+                resolve();
             } 
         };  
     });
@@ -74,6 +84,51 @@ function addToObjectList(s3BucketObjects) {
     s3BucketObjects.forEach(function(bucketObject) {
         awsObjectList.push({objectKey: bucketObject.Key});        
     });
+}
+
+function updateApiMessageArea(numObjects) {
+    // Update the counter for number of object found in message area
+    $('#message-area-api-connect-counter').html(`Objects found: <strong>${numObjects}</strong>`);
+}
+
+function filterObjectsToLogFilesOnly() {
+    return Promise.resolve();
+}
+
+function getObjectDates() {
+
+    awsObjectList.push({objectKey: "test key 201-12-25"});
+
+    awsObjectList.forEach(function(awsObject, index) {
+        //Find & extract date string in key if exists then convert to date object
+        let searchExp = /20\d{2}-\d{2}-\d{2}/; // Expression to find a date in the format yyyy-mm-dd
+        let datePosition = awsObject.objectKey.search(searchExp);                     
+        if (datePosition >= 0) {
+            var dateAsString = awsObject.objectKey.substring(datePosition, datePosition + 10);
+            // Try to convert string to date object and add as property in array
+            awsObject.dateCreated = new Date(dateAsString);
+            // Check its a real date
+            if (isNaN(awsObject.dateCreated)) {
+                // Add error to stack
+                errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + awsObject.objectKey});
+                console.log('Could not convert to date for key ' + awsObject.objectKey);
+                // Remove element from array
+                awsObjectList.splice(index,1);
+            }
+        } else {
+            // Add error to stack
+            errorStack.push({type: 'List Processing', errorMessage: awsObject.objectKey + ' does not contain a valid date string'});
+            console.log(awsObject.objectKey + ' does not contain a valid date string');
+            // Remove element from array
+            awsObjectList.splice(index,1);
+        }
+    // Catch promise result and return up the chain   
+    });
+    return Promise.resolve();
+}
+
+function updateFilterForm() {
+    return Promise.resolve();
 }
 
     // Handle promise result

@@ -39,6 +39,9 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 
 ### Technical Challenges
 
+- Implemented safety limit of x iterations of list object
+- Bucket must only contain log files...
+
 ### User Story Testing
 
 ## Deployment

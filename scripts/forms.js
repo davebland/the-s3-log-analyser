@@ -126,7 +126,7 @@ function submitCredsForm(apiCreds) {
     enableCredsForm(false);
 
     // Write loading to message area
-    $('#message-area-api-connect').append('<p>Loading...</p>');
+    $('#message-area-api-connect-loading').text('Loading...');
 
     // Update object holding AWS Creds
     awsCreds = {
@@ -139,16 +139,15 @@ function submitCredsForm(apiCreds) {
 
     // Invoke function to list objects and handle promise
     awsListObjects().then(function(success) {
-            // On list function success
-            //console.log(success);
-            $('#message-area-api-connect').append(`<p>${success}</p>`);
+            // Update message area
+            $('#message-area-api-connect-loading').text('Success!');            
             // Enable filter form
             enableFilterForm(true);
         }).catch(function(error) {
             // On error write errorStack details to modal message area
             $('#modal-error-message-area').empty();
             errorStack.forEach(function(error) {            
-                $('#modal-error-message-area').append(`<p>${error.type} ERROR: ${error.errorCode} - ${error.errorMessage}</p>`);
+                $('#modal-error-message-area').append(`${error.type}<div class="alert alert-danger" role="alert">${error.errorMessage}</div>`);
             });
             // Display error modal
             $('#modal-error-messages').modal();
