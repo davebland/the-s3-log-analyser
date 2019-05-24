@@ -6,68 +6,67 @@
 
 // Application wide variables
 
-function filterInvalidObjects() {
-    // For each key in array determine if ends in .gz (CloudFront) or some other file extension
-    awsObjectList.forEach(function(awsObject, index) {
-        // Filter out common file types (extensions not gz less than 10 characters)
-        let searchString = awsObject.objectKey.slice(-10);
-        if (searchString.indexOf('.') >= 0) {
-            if (searchString.search('.gz') < 0) {
-                // If not .gz add error to stack
-                errorStack.push({type: 'List Processing', errorMessage: 'Removed object with invalid file extension: ' + awsObject.objectKey});
-                console.log('Removed object with invalid file extension: ' + awsObject.objectKey);
-                // Remove element from array
-                awsObjectList.splice(index,1);
-            }
-        }
-    });
-    return Promise.resolve();
-}
-
-function getObjectDate(awsObjectListItem) {
+function getListObjectDate(objectKey) {
     // Find & extract date string in key if exists then convert to date object
     let searchExp = /20\d{2}-\d{2}-\d{2}/; // Expression to find a date in the format yyyy-mm-dd
-    let datePosition = this.objectKey.search(searchExp);                     
+    let datePosition = objectKey.search(searchExp);                     
     if (datePosition >= 0) {
         // Extract date part of string
-        let dateAsString = this.objectKey.substring(datePosition, datePosition + 10);
+        let dateAsString = objectKey.substring(datePosition, datePosition + 10);
         // Try to convert string to date object and add as object property
-        let tempDate = new Date(dateAsString);
+        var objectDate = new Date(dateAsString);
         // Check its a real date
-        if (isNaN(tempDate)) {
+        if (!(isNaN(objectDate))) {
+            return objectDate;
+        } else {
             // If not real add error to stack
             errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + this.objectKey});
-            console.log('Could not convert to date for key ' + this.objectKey);
-            // Flag object as invalid
-            this.invalid = true;
+            console.log('Could not convert to date for key ' + objectKey);
+            // Return fail
+            return false;
         }
     } else {
         // If not date string found add error to stack
-        errorStack.push({type: 'List Processing', errorMessage: this.objectKey + ' does not contain a valid date string'});
-        console.log(this.objectKey + ' does not contain a valid date string');
-        // Flag object as invalid
-        this.invalid = true;
-    }  
-    return tempDate;
+        errorStack.push({type: 'List Processing', errorMessage: objectKey + ' does not contain a valid date string'});
+        console.log(objectKey + ' does not contain a valid date string');
+        // Return fail
+        return false;
+    } 
 }
 
-function objectListStats() {
-    
+function getListObjectType(objectKey) {
+    // If ends in .gz then type CloudFront
+    if (objectKey.slice(-3) == '.gz') {
+        return "CloudFront";
+    } else if (objectKey.slice(-10).indexOf('.') >= 0) { // Filter out common file types (keys which look like extensions .xxx)
+        // Add to error stack
+        errorStack.push({type: 'List Processing', errorMessage: objectKey + ' has invalid file extension'});
+        console.log(objectKey + ' has invalid file extension');
+        // Return fail
+        return false;
+    } else {
+        // If none of above assume type S3 Log
+        return "S3Log"
+    }
+}
+
+function getObjectListStats() {
+    // Start with fresh stats object
     var objectListStats = {
         gzCount: 0,
-        otherCount: 0
+        s3Count: 0
     };
-
-    // Count keys end in .gz or other (e.g. CloudFront or S3 log)
-    awsObjectList.forEach(function(awsObject, index) {               
-        if (awsObject.objectKey.slice(-3) == '.gz') {
+    awsObjectList.forEach(function(listObject) {
+        // Count keys of each type         
+        if (listObject.type == "CloudFront") {
             objectListStats.gzCount++;
         } else {
-            objectListStats.otherCount++;
+            // Assume S3Log as all others removed already
+            objectListStats.s3Count++;
         }
     });
     // Sort Asc by date
-    awsObjectList.sort((a, b) => a.dateCreated -b.dateCreated);
+    awsObjectList.sort((a, b) => a.dateCreated - b.dateCreated);
     // Get max & min date object (start and end of array)
     objectListStats.maxDate = awsObjectList[awsObjectList.length - 1]['dateCreated'];
     objectListStats.minDate = awsObjectList[0]['dateCreated'];
@@ -75,7 +74,7 @@ function objectListStats() {
     // Update display
     displayListStats(objectListStats);
 
-    return Promise.resolve(objectListStats);
+    return Promise.resolve();
 }
 
 
@@ -83,7 +82,7 @@ function displayListStats(objectListStats) {
     // Update gz count
     $('#message-area-api-connect-gz-count').text(`CloudFront Log Files: ${objectListStats.gzCount}`);
     // Update other count
-    $('#message-area-api-connect-other-count').text(`S3 Log Files: ${objectListStats.otherCount}`);
+    $('#message-area-api-connect-other-count').text(`S3 Log Files: ${objectListStats.s3Count}`);
     // Update form elements using min max dates
     $('#info-date-max').text(objectListStats.maxDate.toDateString());
     $('#date-max').attr('min', createDateString(objectListStats.minDate));

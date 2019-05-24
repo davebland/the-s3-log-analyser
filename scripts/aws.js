@@ -11,9 +11,8 @@ var errorStack = [];
 // Object Constructors
 function AwsObjectListItem(objectKey) {
     this.objectKey = objectKey;
-    this.dateCreated = getObjectDate(); // Find date in object key string
-    this.type = 0; // Type 0 is regular S3 log file, 1 is CloudFront gz file
-    this.invalid = false; // Flag to record if object is not to be a valid part of our list
+    this.dateCreated = getListObjectDate(objectKey); // Find date in object key string
+    this.type = getListObjectType(objectKey); // CloudFront (.gz) or S3Log
 }
 
 // Enable AWS console logger
@@ -48,7 +47,11 @@ function awsListObjects() {
             // Call S3 and handle promise results
             s3.listObjectsV2(s3Options).promise().then(function(s3ListSuccess) {
                     // On successful response add the contents (bucket objects) to our array
-                    addToObjectList(s3ListSuccess.Contents);
+                    //addToObjectList(s3ListSuccess.Contents);
+                    // For each object in recieved array extract the key property and create new list object
+                    s3ListSuccess.Contents.forEach(function(bucketObject) {
+                        awsObjectList.push(new AwsObjectListItem(bucketObject.Key));       
+                    });
                     // Update the count in the message area
                     updateApiMessageArea(awsObjectList.length);
                     // If there is more results to get (continuation token) and we haven't hit the loop safety limit then re-run listObjectLoop
@@ -57,9 +60,8 @@ function awsListObjects() {
                         listLoopCounter++;   
                     } else {
                         console.dir(awsObjectList);
-                        filterInvalidObjects() // Remove invalid objects keys
-                            .then(getObjectDates()) // Find the date of each log file within key name
-                            .then(objectListStats()) // Get object list stats to and update the screen with the information
+                        removeInvalidListObjects() // Remove objects with invalid properties                        
+                            .then(getObjectListStats()) // Get object list stats and update the screen with the information
                             .then(returnPromise())
                             .catch (function(error) {
                                 console.log('A processing error occured');
@@ -88,10 +90,25 @@ function awsListObjects() {
 }
 
 function addToObjectList(s3BucketObjects) {    
-    // For each object in recieved array extract the key property and create new list objects
+    // For each object in recieved array extract the key property and create new list object
     s3BucketObjects.forEach(function(bucketObject) {
-        awsObjectList.push(new awsObjectListItem(bucketObject.Key));       
+        awsObjectList.push(new AwsObjectListItem(bucketObject.Key));       
     });
+}
+
+function removeInvalidListObjects() {
+    awsObjectList.forEach(function(listItem, index) {
+        // For each object in the list, check for invalid (false) properties
+        console.table(listItem)
+        if (!listItem.dateCreated) {
+            // Remove if no date
+            awsObjectList.splice(index, 1);
+        } else if (!listItem.type) {
+            // Remove if no type
+            awsObjectList.splice(index, 1);
+        }
+    });
+    return Promise.resolve();
 }
 
 function updateApiMessageArea(numObjects) {
