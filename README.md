@@ -26,6 +26,9 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 
 ### Future Additions
 
+- Manage different types of log files
+- Display dates in other time zones
+
 ## Technologies
 
 - HTML5

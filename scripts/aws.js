@@ -49,9 +49,9 @@ function awsListObjects() {
                         listLoopCounter++;   
                     } else {
                         console.dir(awsObjectList);
-                        filterObjectsToLogFilesOnly() // Determine no. of each type of log file (.txt .gz)
+                        filterInvalidObjects() // Remove invalid objects keys and count .gz (CloudFront logs)
                             .then(getObjectDates()) // Find the date of each log file within key name
-                            .then(updateFilterForm()) // Update the filter form with the information
+                            .then(objectListStats()) // Update the filter form with the information
                             .then(returnPromise())
                             .catch (function(error) {
                                 console.log('A processing error occured');
@@ -91,45 +91,9 @@ function updateApiMessageArea(numObjects) {
     $('#message-area-api-connect-counter').html(`Objects found: <strong>${numObjects}</strong>`);
 }
 
-function filterObjectsToLogFilesOnly() {
-    return Promise.resolve();
-}
 
-function getObjectDates() {
 
-    awsObjectList.push({objectKey: "test key 201-12-25"});
 
-    awsObjectList.forEach(function(awsObject, index) {
-        //Find & extract date string in key if exists then convert to date object
-        let searchExp = /20\d{2}-\d{2}-\d{2}/; // Expression to find a date in the format yyyy-mm-dd
-        let datePosition = awsObject.objectKey.search(searchExp);                     
-        if (datePosition >= 0) {
-            var dateAsString = awsObject.objectKey.substring(datePosition, datePosition + 10);
-            // Try to convert string to date object and add as property in array
-            awsObject.dateCreated = new Date(dateAsString);
-            // Check its a real date
-            if (isNaN(awsObject.dateCreated)) {
-                // Add error to stack
-                errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + awsObject.objectKey});
-                console.log('Could not convert to date for key ' + awsObject.objectKey);
-                // Remove element from array
-                awsObjectList.splice(index,1);
-            }
-        } else {
-            // Add error to stack
-            errorStack.push({type: 'List Processing', errorMessage: awsObject.objectKey + ' does not contain a valid date string'});
-            console.log(awsObject.objectKey + ' does not contain a valid date string');
-            // Remove element from array
-            awsObjectList.splice(index,1);
-        }
-    // Catch promise result and return up the chain   
-    });
-    return Promise.resolve();
-}
-
-function updateFilterForm() {
-    return Promise.resolve();
-}
 
     // Handle promise result
     
