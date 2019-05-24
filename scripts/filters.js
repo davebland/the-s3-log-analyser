@@ -4,6 +4,8 @@
     BY DAVID BLAND
 */
 
+// Application wide variables
+
 function filterInvalidObjects() {
     // For each key in array determine if ends in .gz (CloudFront) or some other file extension
     awsObjectList.forEach(function(awsObject, index) {
@@ -22,33 +24,31 @@ function filterInvalidObjects() {
     return Promise.resolve();
 }
 
-function getObjectDates() {
-    awsObjectList.forEach(function(awsObject, index) {
-        // Find & extract date string in key if exists then convert to date object
-        let searchExp = /20\d{2}-\d{2}-\d{2}/; // Expression to find a date in the format yyyy-mm-dd
-        let datePosition = awsObject.objectKey.search(searchExp);                     
-        if (datePosition >= 0) {
-            // Extract date part of string
-            let dateAsString = awsObject.objectKey.substring(datePosition, datePosition + 10);
-            // Try to convert string to date object and add as object property in array
-            awsObject.dateCreated = new Date(dateAsString);
-            // Check its a real date
-            if (isNaN(awsObject.dateCreated)) {
-                // If not real add error to stack
-                errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + awsObject.objectKey});
-                console.log('Could not convert to date for key ' + awsObject.objectKey);
-                // Remove element from array
-                awsObjectList.splice(index,1);
-            }
-        } else {
-            // If not date string found add error to stack
-            errorStack.push({type: 'List Processing', errorMessage: awsObject.objectKey + ' does not contain a valid date string'});
-            console.log(awsObject.objectKey + ' does not contain a valid date string');
-            // Remove element from array
-            awsObjectList.splice(index,1);
-        }  
-    });
-    return Promise.resolve();
+function getObjectDate(awsObjectListItem) {
+    // Find & extract date string in key if exists then convert to date object
+    let searchExp = /20\d{2}-\d{2}-\d{2}/; // Expression to find a date in the format yyyy-mm-dd
+    let datePosition = this.objectKey.search(searchExp);                     
+    if (datePosition >= 0) {
+        // Extract date part of string
+        let dateAsString = this.objectKey.substring(datePosition, datePosition + 10);
+        // Try to convert string to date object and add as object property
+        let tempDate = new Date(dateAsString);
+        // Check its a real date
+        if (isNaN(tempDate)) {
+            // If not real add error to stack
+            errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + this.objectKey});
+            console.log('Could not convert to date for key ' + this.objectKey);
+            // Flag object as invalid
+            this.invalid = true;
+        }
+    } else {
+        // If not date string found add error to stack
+        errorStack.push({type: 'List Processing', errorMessage: this.objectKey + ' does not contain a valid date string'});
+        console.log(this.objectKey + ' does not contain a valid date string');
+        // Flag object as invalid
+        this.invalid = true;
+    }  
+    return tempDate;
 }
 
 function objectListStats() {
@@ -71,12 +71,9 @@ function objectListStats() {
     // Get max & min date object (start and end of array)
     objectListStats.maxDate = awsObjectList[awsObjectList.length - 1]['dateCreated'];
     objectListStats.minDate = awsObjectList[0]['dateCreated'];
-    
-    
+
     // Update display
     displayListStats(objectListStats);
-    
-    console.dir(awsObjectList);
 
     return Promise.resolve(objectListStats);
 }
@@ -103,6 +100,21 @@ function displayListStats(objectListStats) {
             `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
         }
     }
-    
     return;
+}
+
+function filterByType() {
+    // Fill temp object list with selected type of log file only
+    // Find list objects with keys ending in .gz and remove all others
+    awsObjectListTemp.forEach(function(awsObject, index) {               
+        if (!(awsObject.objectKey.slice(-3) == '.gz')) {
+            // Remove element from array
+            awsObjectListTemp.splice(index,1);
+        }
+    });
+
+}
+
+function updateSelectedLogFiles() {
+    $('#info-num-files-selected').text(awsObjectListTemp.length);
 }

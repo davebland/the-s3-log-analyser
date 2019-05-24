@@ -8,6 +8,14 @@
 var awsObjectList = [];
 var errorStack = [];
 
+// Object Constructors
+function AwsObjectListItem(objectKey) {
+    this.objectKey = objectKey;
+    this.dateCreated = getObjectDate(); // Find date in object key string
+    this.type = 0; // Type 0 is regular S3 log file, 1 is CloudFront gz file
+    this.invalid = false; // Flag to record if object is not to be a valid part of our list
+}
+
 // Enable AWS console logger
 AWS.config.logger = console;
 
@@ -49,9 +57,9 @@ function awsListObjects() {
                         listLoopCounter++;   
                     } else {
                         console.dir(awsObjectList);
-                        filterInvalidObjects() // Remove invalid objects keys and count .gz (CloudFront logs)
+                        filterInvalidObjects() // Remove invalid objects keys
                             .then(getObjectDates()) // Find the date of each log file within key name
-                            .then(objectListStats()) // Update the filter form with the information
+                            .then(objectListStats()) // Get object list stats to and update the screen with the information
                             .then(returnPromise())
                             .catch (function(error) {
                                 console.log('A processing error occured');
@@ -80,9 +88,9 @@ function awsListObjects() {
 }
 
 function addToObjectList(s3BucketObjects) {    
-    // For each object in array extract the key property only & add to our array
+    // For each object in recieved array extract the key property and create new list objects
     s3BucketObjects.forEach(function(bucketObject) {
-        awsObjectList.push({objectKey: bucketObject.Key});        
+        awsObjectList.push(new awsObjectListItem(bucketObject.Key));       
     });
 }
 
