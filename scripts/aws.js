@@ -19,7 +19,7 @@ function AwsObjectListItem(objectKey) {
 AWS.config.logger = console;
 
 // Set AWS config and service object globally
-function setupAws() {
+function setupAws(awsCreds) {
     // Set creds awsCreds object
     AWS.config.credentials = new AWS.Credentials({accessKeyId: awsCreds.keyId, secretAccessKey: awsCreds.keySecret});
     // Create S3 service object with region and bucket name from awsCreds
@@ -27,10 +27,13 @@ function setupAws() {
 }
 
 // AWS List Objects (first call to AWS), returns promise to handler 
-function awsListObjects() {
+function awsListObjects(awsCreds) {
     return new Promise(function(resolve, reject) {
         // Get an s3 service object setup ready to go
-        let s3 = setupAws();
+        let s3 = setupAws(awsCreds);
+
+        // Reset object list
+        awsObjectList = [];
 
         // Set list loop counter
         let listLoopCounter = 0;
@@ -44,11 +47,9 @@ function awsListObjects() {
             if (NextContinuationToken) {
                 s3Options.ContinuationToken = NextContinuationToken;
             }
-            // Call S3 and handle promise results
+            // Call S3 and handle promise result
             s3.listObjectsV2(s3Options).promise().then(function(s3ListSuccess) {
                     // On successful response add the contents (bucket objects) to our array
-                    //addToObjectList(s3ListSuccess.Contents);
-                    // For each object in recieved array extract the key property and create new list object
                     s3ListSuccess.Contents.forEach(function(bucketObject) {
                         awsObjectList.push(new AwsObjectListItem(bucketObject.Key));       
                     });
@@ -88,47 +89,3 @@ function awsListObjects() {
         };  
     });
 }
-
-function addToObjectList(s3BucketObjects) {    
-    // For each object in recieved array extract the key property and create new list object
-    s3BucketObjects.forEach(function(bucketObject) {
-        awsObjectList.push(new AwsObjectListItem(bucketObject.Key));       
-    });
-}
-
-function removeInvalidListObjects() {
-    awsObjectList.forEach(function(listItem, index) {
-        // For each object in the list, check for invalid (false) properties
-        console.table(listItem)
-        if (!listItem.dateCreated) {
-            // Remove if no date
-            awsObjectList.splice(index, 1);
-        } else if (!listItem.type) {
-            // Remove if no type
-            awsObjectList.splice(index, 1);
-        }
-    });
-    return Promise.resolve();
-}
-
-function updateApiMessageArea(numObjects) {
-    // Update the counter for number of object found in message area
-    $('#message-area-api-connect-counter').html(`Objects found: <strong>${numObjects}</strong>`);
-}
-
-
-
-
-
-    // Handle promise result
-    
-
-                    // Parse object list for key
-
-            // Find date string in key to determine log date
-
-            // Convert to date object and store in list object
-
-            // Determine max & min dates then display in filter form
-
-            // Count no. of object loaded and display in message area

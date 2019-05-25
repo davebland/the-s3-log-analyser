@@ -1,11 +1,10 @@
 /* 
     THE S3 LOG ANALYSER
-    FORM MANAGEMENT
+    FORMS AND MESSAGE AREA MANAGEMENT
     BY DAVID BLAND
 */
 
 // Application wide variables
-var awsCreds = {};
 var saveCredsFlag = false;
 
 // Disable standard form submit behavour (reload page)
@@ -55,15 +54,24 @@ function resetFilterForm() {
     $('#form-filter-log-files')[0].reset();
 }
 
-// Clear API Connect message area
+/* MESSAGE AREAS */
+
+function updateApiMessageArea(numObjects) {
+    // Update the counter for number of object found in message area
+    $('#message-area-api-connect-counter').html(`Objects found: <strong>${numObjects}</strong>`);
+}
+
+// Clear API message area
 function clearApiMessageArea() {
-    $('#message-area-api-connect').empty();
+    $('#message-area-api-connect div').empty();
 }
 
 // Clear Load Logs message area
 function clearLoadLogsMessageArea() {
-    $('#message-area-load-logs').empty();
+    $('#message-area-load-logs div').empty();
 }
+
+/* RESETS */
 
 // Reset Page
 function resetPage() {
@@ -75,8 +83,8 @@ function resetPage() {
     enableFilterForm(false);
     // Clear message areas
     clearApiMessageArea();
-    clearLoadLogsMessageArea()
-    // Clear down application wide variable
+    clearLoadLogsMessageArea();
+    // Clear down application wide variablse
     errorStack = [];
     awsObjectList = [];
 }
@@ -120,7 +128,7 @@ function getAwsRegions() {
 /* FORM SUBMISSION */
 
 // Triggered on submission of API credentials form
-function submitCredsForm(apiCreds) {
+function submitCredsForm(formCreds) {
 
     // Disable creds form whilst processing
     enableCredsForm(false);
@@ -128,78 +136,61 @@ function submitCredsForm(apiCreds) {
     // Write loading to message area
     $('#message-area-api-connect-loading').text('Loading...');
 
-    // Update object holding AWS Creds
-    awsCreds = {
-        awsRegion: apiCreds.awsRegion.value,
-        keyId: apiCreds.keyId.value,
-        keySecret: apiCreds.keySecret.value,
-        bucketName: apiCreds.bucketName.value
+    // Create object holding AWS Creds
+    let awsCreds = {
+        awsRegion: formCreds.awsRegion.value,
+        keyId: formCreds.keyId.value,
+        keySecret: formCreds.keySecret.value,
+        bucketName: formCreds.bucketName.value
     }
     console.table(awsCreds);
 
     // Invoke function to list objects and handle promise
-    awsListObjects().then(function(success) {
+    awsListObjects(awsCreds).then(function(success) {
             // Update message area
             $('#message-area-api-connect-loading').text('Success!');            
             // Enable filter form
             enableFilterForm(true);
         }).catch(function(error) {
-            // On error write errorStack details to modal message area
-            $('#modal-error-message-area').empty();
-            errorStack.forEach(function(error) {            
-                $('#modal-error-message-area').append(`${error.type}<div class="alert alert-danger" role="alert">${error.errorMessage}</div>`);
-            });
-            // Display error modal
-            $('#modal-error-messages').modal();
-            // Clear error stack
-            errorStack = [];
-            // Enable creds form again & clear page message area
-            enableCredsForm(true);
-            clearApiMessageArea();       
+            // Call error display function
+            displayErrors();                              
         });
 
     // Save creds
-    saveCreds();
+    saveCreds(awsCreds);
 
-    return null;
+    return false;
 }
 
 /* SAVED CREDENTIALS */
 
 // Save credentials (if flag set)
-function saveCreds() {
+function saveCreds(awsCreds) {
     if (saveCredsFlag) {
         // Save credentials locally with property name to match those in awsCreds object
         for (var property in awsCreds) {
             localStorage.setItem(property, awsCreds[property]);    
-        }        
+        }      
     }
 }
 
 // Load saved credentials
 function loadSavedCreds() {
-    // Overwrite creds object
-    awsCreds = {
-        awsRegion: localStorage.getItem('awsRegion'),
-        keyId: localStorage.getItem('keyId'),
-        keySecret: localStorage.getItem('keySecret'),
-        bucketName: localStorage.getItem('bucketName')
-    }
     // Input data into form fields
-    $('#access-key-id').val(awsCreds.keyId);
-    $('#access-key-secret').val(awsCreds.keySecret);
-    $('#aws-region-select').val(awsCreds.awsRegion);
-    $('#bucket-name').val(awsCreds.bucketName);
+    $('#access-key-id').val(localStorage.getItem('keyId'));
+    $('#access-key-secret').val(localStorage.getItem('keySecret'));
+    $('#aws-region-select').val(localStorage.getItem('awsRegion'));
+    $('#bucket-name').val(localStorage.getItem('bucketName'));
 }
 
 // Clear saved credentials
 function clearSavedCreds() {    
     localStorage.clear();
-    // Check saved creds button state to disable
+    // Check saved creds button state (to disable)
     checkSavedCredsButtonState();
 }
 
-// Check if saved credentials are available and enable button accordingly
+// Check if it looks like saved cred are avaiable and enable button accordingly
 function checkSavedCredsButtonState() {    
     if (localStorage.length > 0) {
         $('#buttons-load-local-saved :input').prop('disabled', false);

@@ -50,6 +50,21 @@ function getListObjectType(objectKey) {
     }
 }
 
+function removeInvalidListObjects() {
+    // For each object in the list, check for invalid (false) properties
+    awsObjectList.forEach(function(listItem, index) {
+        console.table(listItem)
+        if (!listItem.dateCreated) {
+            // Remove if no date
+            awsObjectList.splice(index, 1);
+        } else if (!listItem.type) {
+            // Remove if no type
+            awsObjectList.splice(index, 1);
+        }
+    });
+    return Promise.resolve();
+}
+
 function getObjectListStats() {
     // Start with fresh stats object
     var objectListStats = {

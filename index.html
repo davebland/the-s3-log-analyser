@@ -19,6 +19,7 @@
     <script defer src="./scripts/forms.js"></script>
     <script defer src="./scripts/aws.js"></script>
     <script defer src="./scripts/filters.js"></script>
+    <script defer src="./scripts/errors.js"></script>
 </head>
 <body>
     <!-- Site Header -->
@@ -221,7 +222,8 @@
                     <!-- Eror message content via JS -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Go Back</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="errorModalContinue();">Continue</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="errorModalGoBack();">Go Back</button>
                 </div>
             </div>
         </div>
