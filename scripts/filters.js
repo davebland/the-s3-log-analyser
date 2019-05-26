@@ -20,14 +20,14 @@ function getListObjectDate(objectKey) {
             return objectDate;
         } else {
             // If not real add error to stack
-            errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + objectKey});
+            errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + objectKey, severity: 'warning'});
             console.log('Could not convert to date for key ' + objectKey);
             // Return fail
             return false;
         }
     } else {
         // If not date string found add error to stack
-        errorStack.push({type: 'List Processing', errorMessage: objectKey + ' does not contain a valid date string'});
+        errorStack.push({type: 'List Processing', errorMessage: objectKey + ' does not contain a valid date string', severity: 'warning'});
         console.log(objectKey + ' does not contain a valid date string');
         // Return fail
         return false;
@@ -40,7 +40,7 @@ function getListObjectType(objectKey) {
         return "CloudFront";
     } else if (objectKey.slice(-10).indexOf('.') >= 0) { // Filter out common file types (keys which look like extensions .xxx)
         // Add to error stack
-        errorStack.push({type: 'List Processing', errorMessage: objectKey + ' has invalid file extension'});
+        errorStack.push({type: 'List Processing', errorMessage: objectKey + ' has invalid file extension', severity: 'warning'});
         console.log(objectKey + ' has invalid file extension');
         // Return fail
         return false;
@@ -105,11 +105,11 @@ function getObjectListStats(removedCount = 0) {
 
 function displayListStats(objectListStats) {
     // Update gz count
-    $('#message-area-api-connect-gz-count').text(`CloudFront Log Files: ${objectListStats.gzCount}`);
+    $('#message-area-api-connect-gz-count').html(`CloudFront Log Files: <i>${objectListStats.gzCount}</i>`);
     // Update other count
-    $('#message-area-api-connect-other-count').text(`S3 Log Files: ${objectListStats.s3Count}`);
+    $('#message-area-api-connect-other-count').html(`S3 Log Files: <i>${objectListStats.s3Count}</i>`);
     // Update removed count
-    $('#message-area-api-connect-removed-count').text(`Files Ignored: ${objectListStats.removedCount}`);
+    $('#message-area-api-connect-removed-count').html(`Files Ignored: <i>${objectListStats.removedCount}</i>`);
     // Update form elements using min max dates
     $('#info-date-max').text(objectListStats.maxDate.toDateString());
     $('#date-max').attr('min', createDateString(objectListStats.minDate));

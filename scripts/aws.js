@@ -65,13 +65,14 @@ function awsListObjects(awsCreds) {
                             .then((removedCount) => {getObjectListStats(removedCount);}) // Get object list stats and update the screen with the information
                             .then(returnPromise())
                             .catch (function(error) {
-                                console.log('A processing error occured');
+                                // If promise error add to stack
+                                errorStack.push({type: 'List Processing', errorMessage: 'Unknown processing error', severity: 'fatal'});
                             })
                     }
                 }).catch(function(s3ListError) {
                     // If api call fails then add error to stack
                     console.log(s3ListError);
-                    errorStack.push({type: 'AWS API', errorMessage: s3ListError.message});
+                    errorStack.push({type: 'AWS API', errorMessage: s3ListError.message, severity: 'fatal'});
                     returnPromise();
                 });
         }

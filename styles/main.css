@@ -71,7 +71,7 @@ footer {
 /** TEMP **/
 
 .row {
-    border: 1px solid red;
+    //border: 1px solid red;
 }
 
 /** Form Styles **/
@@ -84,4 +84,10 @@ footer {
 
 .vertically-spaced-item {
     flex: auto;
+}
+
+/** Message Areas **/
+
+#message-area-api-connect div {
+    padding: 1rem 0;
 }
