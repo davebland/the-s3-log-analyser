@@ -20,7 +20,7 @@ function getListObjectDate(objectKey) {
             return objectDate;
         } else {
             // If not real add error to stack
-            errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + this.objectKey});
+            errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + objectKey});
             console.log('Could not convert to date for key ' + objectKey);
             // Return fail
             return false;
@@ -52,24 +52,34 @@ function getListObjectType(objectKey) {
 
 function removeInvalidListObjects() {
     // For each object in the list, check for invalid (false) properties
+    let indexesToRemove = []
     awsObjectList.forEach(function(listItem, index) {
         console.table(listItem)
         if (!listItem.dateCreated) {
-            // Remove if no date
-            awsObjectList.splice(index, 1);
+            // Add to remove list if no date
+            indexesToRemove.push(index);
         } else if (!listItem.type) {
-            // Remove if no type
-            awsObjectList.splice(index, 1);
+            // Add to remove list if no type
+            indexesToRemove.push(index);
         }
     });
-    return Promise.resolve();
+    // Remove object list items with indexes in remove list
+    let removedCount = 0;
+    indexesToRemove.reverse(); // Start from highest index to avoid errors as array size changes
+    indexesToRemove.forEach(function(indexToRemove) {
+        console.log('removing ' + awsObjectList[indexToRemove]['objectKey']);
+        awsObjectList.splice(indexToRemove, 1);
+        removedCount++;
+    });
+    return Promise.resolve(removedCount);
 }
 
-function getObjectListStats() {
+function getObjectListStats(removedCount = 0) {
     // Start with fresh stats object
     var objectListStats = {
         gzCount: 0,
-        s3Count: 0
+        s3Count: 0,
+        removedCount: removedCount
     };
     awsObjectList.forEach(function(listObject) {
         // Count keys of each type         
@@ -98,6 +108,8 @@ function displayListStats(objectListStats) {
     $('#message-area-api-connect-gz-count').text(`CloudFront Log Files: ${objectListStats.gzCount}`);
     // Update other count
     $('#message-area-api-connect-other-count').text(`S3 Log Files: ${objectListStats.s3Count}`);
+    // Update removed count
+    $('#message-area-api-connect-removed-count').text(`Files Ignored: ${objectListStats.removedCount}`);
     // Update form elements using min max dates
     $('#info-date-max').text(objectListStats.maxDate.toDateString());
     $('#date-max').attr('min', createDateString(objectListStats.minDate));

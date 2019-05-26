@@ -62,7 +62,7 @@ function awsListObjects(awsCreds) {
                     } else {
                         console.dir(awsObjectList);
                         removeInvalidListObjects() // Remove objects with invalid properties                        
-                            .then(getObjectListStats()) // Get object list stats and update the screen with the information
+                            .then((removedCount) => {getObjectListStats(removedCount);}) // Get object list stats and update the screen with the information
                             .then(returnPromise())
                             .catch (function(error) {
                                 console.log('A processing error occured');
