@@ -5,6 +5,7 @@
 */
 
 // Application wide variables
+var ndx;
 
 function getListObjectDate(objectKey) {
     // Find & extract date string in key if exists then convert to date object
@@ -102,7 +103,6 @@ function getObjectListStats(removedCount = 0) {
     return Promise.resolve();
 }
 
-
 function displayListStats(objectListStats) {
     // Update gz count
     $('#message-area-api-connect-gz-count').html(`CloudFront Log Files: <i>${objectListStats.gzCount}</i>`);
@@ -114,9 +114,11 @@ function displayListStats(objectListStats) {
     $('#info-date-max').text(objectListStats.maxDate.toDateString());
     $('#date-max').attr('min', createDateString(objectListStats.minDate));
     $('#date-max').attr('max', createDateString(objectListStats.maxDate));
+    $('#date-max').val(createDateString(objectListStats.maxDate));
     $('#info-date-min').text(objectListStats.minDate.toDateString());
     $('#date-min').attr('min', createDateString(objectListStats.minDate));
     $('#date-min').attr('max', createDateString(objectListStats.maxDate));
+    $('#date-min').val(createDateString(objectListStats.minDate));
 
     function createDateString(dateObject) {
         // Return date in format yyyy-mm-dd
@@ -128,19 +130,47 @@ function displayListStats(objectListStats) {
     }
     return;
 }
+ 
+function filterListByType(type) {
+    // Load awsObjectList list into crossfilter
+    ndx = crossfilter(awsObjectList);
+    // Create dimension by type & filter by requested type
+    let typeFilter = ndx.dimension(dc.pluck('type')).filter(type);
+    // Update count display & return typeFilter dimension
+    updateSelectedLogFiles();
+    return Promise.resolve();
+}
 
-function filterByType() {
-    // Fill temp object list with selected type of log file only
-    // Find list objects with keys ending in .gz and remove all others
-    awsObjectListTemp.forEach(function(awsObject, index) {               
-        if (!(awsObject.objectKey.slice(-3) == '.gz')) {
-            // Remove element from array
-            awsObjectListTemp.splice(index,1);
-        }
-    });
-
+function filterListByDate(minOrMax, dateFieldId) {
+    // Get date value from field with id
+    let dateValue = new Date($(dateFieldId).val());
+    console.log(dateValue);
+    // Create dimension by date
+    let dateDim = ndx.dimension(dc.pluck('dateCreated'));
+    // Filter by range min or max
+    if (minOrMax == 'min') {
+        let dateFilter = dateDim.filterRange([dateValue, new Date()]);
+    } else if (minOrMax == 'max') {        
+        let dateFilter = dateDim.filterRange([null, dateValue]);
+    }
+    console.log(dateFilter);
+    // Update count display & return
+    updateSelectedLogFiles();
+    return Promise.resolve();
 }
 
 function updateSelectedLogFiles() {
-    $('#info-num-files-selected').text(awsObjectListTemp.length);
+    console.dir(ndx.allFiltered());
+    $('#info-num-files-selected').text(ndx.groupAll().reduceCount().value());
 }
+
+/** Test Data **/
+
+awsObjectList = [
+    {objectKey: "test key1", createdDate: "2012-01-12", type: "s3log"},
+    {objectKey: "test key2", createdDate: "2012-02-12", type: "s3log"},
+    {objectKey: "test key3", createdDate: "2012-03-12", type: "s3log"},
+    {objectKey: "test key4", createdDate: "2012-04-12", type: "s3log"}
+]
+
+//filterListByType().then((dim) => { filterListByDate('min','2012-01-12'); filterListByDate('max','2012-04-12'); });

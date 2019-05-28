@@ -15,6 +15,9 @@
     <script defer src="./lib/js/jquery-3.4.1.min.js"></script>
     <script defer src="./lib/js/bootstrap.bundle.min.js"></script>
     <script defer src="./lib/js/aws-sdk-2.461.0.min.js"></script>
+    <script defer src="./lib/js/d3.min.js"></script>
+    <script defer src="./lib/js/crossfilter.min.js"></script>
+    <script defer src="./lib/js/dc.min.js"></script>
     <!-- App JS -->
     <script defer src="./scripts/forms.js"></script>
     <script defer src="./scripts/aws.js"></script>
@@ -100,11 +103,11 @@
                     <fieldset class="form-group border p-2 text-center">
                         <legend class="text-left">Select Log Type</legend>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="log-file-type" id="type-s3-log-file" value="s3Log" required disabled>
+                            <input class="custom-control-input" type="radio" name="log-file-type" id="type-s3-log-file" value="s3Log" onclick="filterListByType('S3Log');" required disabled>
                             <label class="custom-control-label" for="type-s3-log-file">S3 Access Log (.txt)</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="log-file-type" id="type-cloudfront-log-file" value="cfLog" required disabled>
+                            <input class="custom-control-input" type="radio" name="log-file-type" id="type-cloudfront-log-file" value="cfLog" onclick="filterListByType('CloudFront');" required disabled>
                             <label class="custom-control-label" for="type-cloudfront-log-file">CloudFront Access Log (.gz)</label>
                         </div>
                     </fieldset>
@@ -113,12 +116,12 @@
                             <legend>Filter By Date</legend>
                             <div class="form-group">
                                 <label class="form-text text-muted" for="date-min">From:</label>
-                                <input class="form-control" type="date" name="date-min" id="date-min" min="" max="" disabled>
+                                <input class="form-control" type="date" name="date-min" id="date-min" min="" max="" onclick="filterListByDate('min', '#date-min');" disabled>
                                 <p class="text-right"><small >Earliest: <span id="info-date-min"><!-- JS Inserts --></span></small></p> 
                             </div>
                             <div class="form-group">
                                 <label class="form-text text-muted" for="date-max">To:</label>                                                    
-                                <input class="form-control" type="date" name="date-max" id="date-max" min="" max="" disabled>
+                                <input class="form-control" type="date" name="date-max" id="date-max" min="" max="" onclick="filterListByDate('max', '#date-max');" disabled>
                                 <p class="text-right"><small >Latest: <span id="info-date-max"><!-- JS Inserts --></span></small></p> 
                             </div>                                                   
                         </fieldset>

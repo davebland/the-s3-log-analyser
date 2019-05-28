@@ -37,6 +37,9 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
     - Bootstrap (4.3.1)
     - jQuery (3.4.1)
     - AWS SDK for JS, S3 service only (2.461)
+    - dc.js (3.0.12)
+        - crossfilter.js (1.4.7)
+        - d3.js (5.9.2)
 
 ## Testing
 
