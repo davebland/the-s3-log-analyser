@@ -5,7 +5,7 @@
 */
 
 function displayErrors() {
-    // Fill & display error modal
+    //Empty error modal
     $('#modal-error-message-area').empty();
     // Write errorStack details to modal message area
     errorStack.forEach(function(error) {
@@ -23,9 +23,8 @@ function displayErrors() {
 };
 
 function errorModalGoBack() {
-    // Disable filter form and enable creds form
+    // Re Enable creds form
     enableCredsForm(true);
-    enableFilterForm(false);
     // Clear message areas
     clearApiMessageArea();
     // Clear error stack

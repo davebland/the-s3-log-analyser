@@ -90,3 +90,8 @@ function awsListObjects(awsCreds) {
         };  
     });
 }
+
+// AWS Get Object, return promise to handler
+function awsGetObjects() {
+    return Promise.resolve();
+}

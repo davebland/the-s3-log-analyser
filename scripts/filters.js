@@ -6,6 +6,7 @@
 
 // Application wide variables
 var ndx;
+var dateDim;
 
 function getListObjectDate(objectKey) {
     // Find & extract date string in key if exists then convert to date object
@@ -132,31 +133,44 @@ function displayListStats(objectListStats) {
 }
  
 function filterListByType(type) {
+    // Reset filter by date fields
+    
     // Load awsObjectList list into crossfilter
     ndx = crossfilter(awsObjectList);
     // Create dimension by type & filter by requested type
-    let typeFilter = ndx.dimension(dc.pluck('type')).filter(type);
-    // Update count display & return typeFilter dimension
+    ndx.dimension(dc.pluck('type')).filter(type);
+    // Create dimension by date
+    dateDim = ndx.dimension(dc.pluck('dateCreated'));
+    // Update count display
+    updateSelectedLogFiles();
+    // Enable next form elements
+    enableFilterByDateForm(true);
+    enableFilterByPresetForm(true);
+    return Promise.resolve();
+}
+
+function filterListByDate() {
+    // Disable filter by type and preset
+    enableFilterByTypeForm(false);
+    enableFilterByPresetForm(false);
+    // Get date value from both date form elements
+    let dateMin = new Date($('#date-min').val());
+    let dateMax = new Date($('#date-max').val());
+    dateMax.setDate(dateMax.getDate() + 1); // Add 1 day to satisfy filter function
+    console.log(dateMin);
+    console.log(dateMax);
+    // Clear old filters and re filter date dimension by range min or max
+    dateDim.filterAll();
+    dateDim.filterRange([dateMin, dateMax]);
+    // Update count display & return
     updateSelectedLogFiles();
     return Promise.resolve();
 }
 
-function filterListByDate(minOrMax, dateFieldId) {
-    // Get date value from field with id
-    let dateValue = new Date($(dateFieldId).val());
-    console.log(dateValue);
-    // Create dimension by date
-    let dateDim = ndx.dimension(dc.pluck('dateCreated'));
-    // Filter by range min or max
-    if (minOrMax == 'min') {
-        let dateFilter = dateDim.filterRange([dateValue, new Date()]);
-    } else if (minOrMax == 'max') {        
-        let dateFilter = dateDim.filterRange([null, dateValue]);
-    }
-    console.log(dateFilter);
-    // Update count display & return
-    updateSelectedLogFiles();
-    return Promise.resolve();
+function filterListByPreset(presetNum) {
+    // Disable filter by type and date
+    enableFilterByTypeForm(false);
+    enableFilterByDateForm(false);
 }
 
 function updateSelectedLogFiles() {
@@ -164,6 +178,14 @@ function updateSelectedLogFiles() {
     $('#info-num-files-selected').text(ndx.groupAll().reduceCount().value());
 }
 
+function changeFilters() {
+    // Clear chart display area
+
+    // Re-enable filter form elements
+    enableFilterByTypeForm(true);
+    enableFilterByDateForm(true);
+    enableFilterByPresetForm(true);
+}
 /** Test Data **/
 
 awsObjectList = [

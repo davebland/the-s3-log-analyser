@@ -33,16 +33,29 @@ function enableCredsForm(yes) {
     }
 }
 
-// Enable/disable Filter Logs form
-function enableFilterForm(yes) {
+// Enable/disable Filter Logs form by type
+function enableFilterByTypeForm(yes) {
     if (yes) {
         //Enable form fields & buttons
-        $('#form-filter-log-files :input').prop('disabled', false);
+        $('#fieldset-log-file-type :input').prop('disabled', false);
     } else {
         //Disable form fields & buttons
-        $('#form-filter-log-files :input').prop('disabled', true);
+        $('#fieldset-log-file-type :input').prop('disabled', true);
     }
 }
+
+// Enable/disable Filter Logs form by date
+function enableFilterByDateForm(yes) {
+    if (yes) {
+        //Enable form fields & buttons
+        $('#fieldset-log-file-date :input').prop('disabled', false);
+    } else {
+        //Disable form fields & buttons
+        $('#fieldset-log-file-date :input').prop('disabled', true);
+    }
+}
+
+function enableFilterByPresetForm(yes) {};
 
 // Reset API Credentials Form
 function resetCredsForm() {
@@ -80,7 +93,9 @@ function resetPage() {
     resetFilterForm();
     // Disable filter form and enable creds form
     enableCredsForm(true);
-    enableFilterForm(false);
+    enableFilterByTypeForm(false);
+    enableFilterByDateForm(false);
+    enableFilterByPresetForm(false);
     // Clear message areas
     clearApiMessageArea();
     clearLoadLogsMessageArea();
@@ -150,7 +165,7 @@ function submitCredsForm(formCreds) {
             // Update message area
             $('#message-area-api-connect-loading').text('Success!');            
             // Enable filter form
-            enableFilterForm(true);
+            enableFilterByTypeForm(true);
         }).catch(function(error) {
             // Call error display function
             displayErrors();                              
@@ -160,6 +175,33 @@ function submitCredsForm(formCreds) {
     saveCreds(awsCreds);
 
     return false;
+}
+
+function submitFilterForm() {
+    // Disable filter form whilst processing
+    enableFilterByTypeForm(false);
+    enableFilterByDateForm(false);
+    enableFilterByPresetForm(false);
+
+    // Write loading to message area
+    $('#message-area-load-logs').text('Loading...');
+
+    // Convert list crossfilter to array of keys to retrieve
+    let awsGetList = dateDim.top(Infinity);
+    
+    // Generate a get request for each key in the list
+    awsGetList.forEach(function(listItem) {
+        console.log(listItem.objectKey);
+        // Invoke function to get objects and handle promise
+        awsGetObjects().then(function(success) {
+                
+        }).catch(function(error) {
+            // Call error display function
+            displayErrors();                              
+        });
+    });
+
+    return false; 
 }
 
 /* SAVED CREDENTIALS */
