@@ -2,7 +2,7 @@
 
 Interactive Frontend Development Milestone Project for Code Institute.
 
-A web application to retrieve two common types of log files stored in Amazon's Web Services (AWS) object storage system (S3). The data is access records for an S3 bucket or CloudFront distribution and the app visualises it for the user as charts & tables.
+A web application to retrieve two common types of log files stored in Amazon's Web Services (AWS) object storage system (S3). The data contained in the log files is access records for an S3 bucket or CloudFront distribution and the app visualises it for the user as charts & tables.
 
 ## Demo
 
@@ -12,9 +12,9 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 
 ### User Stories
 
-1. The purpose of the application is clear.
+1. As a new user, the purpose of the application is clear.
 2. The user interface is intuitive enough that an IT literate user with knowledge of AWS can use it without looking at the help documentation.
-3. A user who is unsure what credentials are required can find links to relevant tutorials in the help modal.
+3. A user can use the help button to bring up instructions on how to use the app.
 4. The charts & tables are relevant to the purpose of presenting the data.
 5. Where data values are missing in the log files, these are presented gracefully on the charts.
 6. If a S3 bucket doesn't contain correctly formatted log files the application fails gracefully with a relevant error message.
@@ -23,6 +23,8 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 ## Features
 
 - Locally saved API credentials
+- Extensive use of JS promises
+- Error management incld. classification warning/fatal
 
 ### Future Additions
 
@@ -47,6 +49,7 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 
 - Implemented safety limit of x iterations of list object
 - Bucket must only contain log files...
+- Decompress .gz log files using browser with header ResponseContentEncoding
 
 ### User Story Testing
 
