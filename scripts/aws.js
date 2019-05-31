@@ -7,6 +7,7 @@
 // Application wide variables
 var awsObjectList = [];
 var errorStack = [];
+var s3;
 
 // Object Constructors
 function AwsObjectListItem(objectKey) {
@@ -30,7 +31,7 @@ function setupAws(awsCreds) {
 function awsListObjects(awsCreds) {
     return new Promise(function(resolve, reject) {
         // Get an s3 service object setup ready to go
-        let s3 = setupAws(awsCreds);
+        s3 = setupAws(awsCreds);
 
         // Reset object list
         awsObjectList = [];
@@ -92,6 +93,20 @@ function awsListObjects(awsCreds) {
 }
 
 // AWS Get Object, return promise to handler
-function awsGetObjects() {
-    return Promise.resolve();
+function awsGetObject(listObject) {
+    return new Promise(function(resolve, reject) {
+        // Set additional S3 parameters including responsetype header for CloudFront .gz object          
+        let s3Options = {
+            Key: listObject.objectKey                         
+        };
+        if (listObject.type == "CloudFront") {
+            s3Options.ResponseContentEncoding = "gzip";
+        }
+        // Call S3 and handle promise result
+        s3.getObject(s3Options).promise().then(function(success) {
+            resolve(success.Body.toString());
+        }).catch(function(error) {
+            reject();
+        });
+    });
 }

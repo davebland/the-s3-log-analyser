@@ -142,7 +142,7 @@ function getAwsRegions() {
 
 /* FORM SUBMISSION */
 
-// Triggered on submission of API credentials form
+// Triggered on submission of credentials form
 function submitCredsForm(formCreds) {
 
     // Disable creds form whilst processing
@@ -177,6 +177,7 @@ function submitCredsForm(formCreds) {
     return false;
 }
 
+// Triggered on submission of filter form
 function submitFilterForm() {
     // Disable filter form whilst processing
     enableFilterByTypeForm(false);
@@ -193,11 +194,11 @@ function submitFilterForm() {
     awsGetList.forEach(function(listItem) {
         console.log(listItem.objectKey);
         // Invoke function to get objects and handle promise
-        awsGetObjects().then(function(success) {
-                
+        awsGetObject(listItem).then(function(success) {
+            console.log(success);
         }).catch(function(error) {
             // Call error display function
-            displayErrors();                              
+            displayErrors();                          
         });
     });
 
