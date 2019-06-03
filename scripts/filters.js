@@ -146,6 +146,7 @@ function filterListByType(type) {
     // Enable next form elements
     enableFilterByDateForm(true);
     enableFilterByPresetForm(true);
+    enableFilterFormSubmit(true);
     return Promise.resolve();
 }
 

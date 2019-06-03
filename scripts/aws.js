@@ -57,7 +57,7 @@ function awsListObjects(awsCreds) {
                     // Update the count in the message area
                     updateApiMessageArea(awsObjectList.length);
                     // If there is more results to get (continuation token) and we haven't hit the loop safety limit then re-run listObjectLoop
-                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < 1) {
+                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < 100) {
                         listObjectLoop(s3ListSuccess.NextContinuationToken);
                         listLoopCounter++;   
                     } else {

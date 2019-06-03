@@ -57,6 +57,16 @@ function enableFilterByDateForm(yes) {
 
 function enableFilterByPresetForm(yes) {};
 
+function enableFilterFormSubmit(yes) {
+    if (yes) {
+        //Enable form fields & buttons
+        $('#button-submit-filter-form:input').prop('disabled', false);
+    } else {
+        //Disable form fields & buttons
+        $('#button-submit-filter-form:input').prop('disabled', true);
+    }
+}
+
 // Reset API Credentials Form
 function resetCredsForm() {
     $('#form-api-creds')[0].reset(); 
@@ -185,20 +195,27 @@ function submitFilterForm() {
     enableFilterByPresetForm(false);
 
     // Write loading to message area
-    $('#message-area-load-logs').text('Loading...');
+    $('#status-area-load-logs').text('Loading...');
 
     // Convert list crossfilter to array of keys to retrieve
     let awsGetList = dateDim.top(Infinity);
     
+    // Reset & display loaded logs counter
+    let loadedLogsCounter = 0;
+    $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
+
     // Generate a get request for each key in the list
     awsGetList.forEach(function(listItem) {
         console.log(listItem.objectKey);
         // Invoke function to get objects and handle promise
         awsGetObject(listItem).then(function(success) {
+            // Update loaded logs counter
+            loadedLogsCounter++;
+            $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
             console.log(success);
         }).catch(function(error) {
             // Call error display function
-            displayErrors();                          
+            displayErrors();                      
         });
     });
 
