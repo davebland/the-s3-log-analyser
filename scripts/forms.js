@@ -199,24 +199,18 @@ function submitFilterForm() {
 
     // Convert list crossfilter to array of keys to retrieve
     let awsGetList = dateDim.top(Infinity);
-    
-    // Reset & display loaded logs counter
-    let loadedLogsCounter = 0;
-    $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
 
-    // Generate a get request for each key in the list
-    awsGetList.forEach(function(listItem) {
-        console.log(listItem.objectKey);
-        // Invoke function to get objects and handle promise
-        awsGetObject(listItem).then(function(success) {
-            // Update loaded logs counter
-            loadedLogsCounter++;
-            $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
-            console.log(success);
-        }).catch(function(error) {
-            // Call error display function
-            displayErrors();                      
-        });
+    // Send get list to aws function & handle promise
+    awsGetObjects(awsGetList).then(function(success) {
+        // Write success to message area
+        $('#status-area-load-logs').text('Logs loaded successfully!');
+        // Display the charts
+        
+    }).catch(function(error) {
+        // Write warning to message area
+        $('#status-area-load-logs').text('Logs loaded with some errors...');
+        // Call error display function
+        displayErrors();
     });
 
     return false; 

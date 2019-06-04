@@ -27,6 +27,7 @@ function errorModalGoBack() {
     enableCredsForm(true);
     // Clear message areas
     clearApiMessageArea();
+    clearLoadLogsMessageArea();
     // Clear error stack
     errorStack = [];
 }

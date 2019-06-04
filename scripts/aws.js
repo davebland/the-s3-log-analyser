@@ -8,6 +8,7 @@
 var awsObjectList = [];
 var errorStack = [];
 var s3;
+var dataArray = [];
 
 // Object Constructors
 function AwsObjectListItem(objectKey) {
@@ -57,7 +58,7 @@ function awsListObjects(awsCreds) {
                     // Update the count in the message area
                     updateApiMessageArea(awsObjectList.length);
                     // If there is more results to get (continuation token) and we haven't hit the loop safety limit then re-run listObjectLoop
-                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < 100) {
+                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < 1) {
                         listObjectLoop(s3ListSuccess.NextContinuationToken);
                         listLoopCounter++;   
                     } else {
@@ -92,21 +93,84 @@ function awsListObjects(awsCreds) {
     });
 }
 
-// AWS Get Object, return promise to handler
-function awsGetObject(listObject) {
-    return new Promise(function(resolve, reject) {
+// AWS Get Object, returns promise to handler
+function awsGetObjects(awsGetList) {
+    // Reset & display loaded logs counter
+    let loadedLogsCounter = 0;
+    $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
+    // Reset dataArray
+    dataArray = [];
+    // Create an array of promises (one for each file to be retrieved)
+    let promiseArray = [];
+    awsGetList.forEach(function(listItem) {
+        console.log('Requesting: ' + listItem.objectKey);
         // Set additional S3 parameters including responsetype header for CloudFront .gz object          
         let s3Options = {
-            Key: listObject.objectKey                         
+            Key: listItem.objectKey                         
         };
-        if (listObject.type == "CloudFront") {
+        if (listItem.type == "CloudFront") {
             s3Options.ResponseContentEncoding = "gzip";
         }
-        // Call S3 and handle promise result
-        s3.getObject(s3Options).promise().then(function(success) {
-            resolve(success.Body.toString());
-        }).catch(function(error) {
-            reject();
+        // Create the request object
+        let s3GetRequest = new Promise(function(resolve, reject) {
+            // Call S3 to get objects and handle promise
+            s3.getObject(s3Options).promise().then(function(apiSuccess) {
+                // Send data to processing function & handle promise
+                parseLogFileContent(apiSuccess.Body.toString()).then(function(parseSuccess) {
+                    // Update loaded logs counter
+                    loadedLogsCounter++;
+                    $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
+                    console.log(success);
+                    resolve();
+                }).catch(function(parseError) {
+                    // Catch parsing error and save as warning
+                    let errorText = `Error processing file ${listItem.objectKey} - ${parseError.message}`;
+                    errorStack.push({type: 'Log File Processing', errorMessage: errorText, severity: 'warning'});
+                    resolve();
+                });  
+            }).catch(function(apiError) {
+                // Catch API errors and save as fatal
+                let errorText = `Error getting file ${listItem.objectKey} - ${apiError.message}`;
+                errorStack.push({type: 'AWS API', errorMessage: errorText, severity: 'fatal'});
+                reject();
+            });
+        })            
+        // Add the promise to the array
+        promiseArray.push(s3GetRequest);
+    })
+
+    // Track when all promises are complete and use as return
+    console.table(dataArray);
+    return Promise.all(promiseArray);
+}
+
+function parseLogFileContent(content) {
+    // Parse response to JS object & add to results array      
+    let parser = d3.dsvFormat(" ");
+    try {
+        let results = parser.parseRows(content, function(d, i) {
+            return {
+                f1: d[0],
+                f2: d[1],
+                f3: d[2],
+                f4: d[3],
+                f5: d[4],
+                f6: d[5],
+                f7: d[6],
+                f8: d[7],
+                f9: d[8],
+                f10: d[9],
+                f11: d[10],
+                f12: d[11],
+                f13: d[12],
+                f14: d[13],
+                f15: d[14],
+                f16: d[15]
+            };
         });
-    });
+        dataArray = dataArray.concat(results);
+        return Promise.resolve();        
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }
