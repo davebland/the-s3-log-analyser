@@ -116,11 +116,10 @@ function awsGetObjects(awsGetList) {
             // Call S3 to get objects and handle promise
             s3.getObject(s3Options).promise().then(function(apiSuccess) {
                 // Send data to processing function & handle promise
-                parseLogFileContent(apiSuccess.Body.toString()).then(function(parseSuccess) {
+                parseLogFileContent(apiSuccess.Body.toString(), listItem.type).then(function(parseSuccess) {
                     // Update loaded logs counter
                     loadedLogsCounter++;
                     $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
-                    console.log(success);
                     resolve();
                 }).catch(function(parseError) {
                     // Catch parsing error and save as warning
@@ -144,32 +143,56 @@ function awsGetObjects(awsGetList) {
     return Promise.all(promiseArray);
 }
 
-function parseLogFileContent(content) {
-    // Parse response to JS object & add to results array      
+function parseLogFileContent(content, type) {
+    // Parse response to JS object & add to results array
+    // Remove spaces followed by + (time)
+    let searchExpression = / (?=\+)/gm;
+    content = content.replace(searchExpression, "");
+    // Remove spaces contained within quotes
+    searchExpression = /(?<= "[^"]*) (?=[^"]*" )/gm;
+    content = content.replace(searchExpression, "");
+    // Remove lines starting with # (.gz header lines)
+    searchExpression = /#[^\n]*\n/gm;
+    content = content.replace(searchExpression, "");
+    console.log(content);
+    // Create space delimeted parser for S3 Logs
     let parser = d3.dsvFormat(" ");
-    try {
-        let results = parser.parseRows(content, function(d, i) {
-            return {
-                f1: d[0],
-                f2: d[1],
-                f3: d[2],
-                f4: d[3],
-                f5: d[4],
-                f6: d[5],
-                f7: d[6],
-                f8: d[7],
-                f9: d[8],
-                f10: d[9],
-                f11: d[10],
-                f12: d[11],
-                f13: d[12],
-                f14: d[13],
-                f15: d[14],
-                f16: d[15]
-            };
-        });
+    // Parse data from the log row into an object according to type, ignore unwanted fields
+    let results = [];
+    try {                   
+        if (type == "S3Log") {
+            results = parser.parseRows(content, function(d, i) { 
+                return {
+                    TimeDate: d[2],
+                    Operation: d[6],
+                    FileRequested: d[7],
+                    HttpStatus: d[9],
+                    BytesSent: d[11],
+                    TotalTime: d[13],
+                    Referrer: d[15],
+                    UserAgent: d[16],
+                    Https: d[20],
+                }
+            });
+        } else {
+            // Assume CloudFront if not S3
+            results = d3.tsvParseRows(content, function(d, i) {             
+                return {
+                    TimeDate: d[0] + d[1],
+                    Operation: d[5],
+                    FileRequested: d[7],
+                    HttpStatus: d[8],
+                    BytesSent: d[3],
+                    TotalTime: d[17],
+                    Referrer: d[9],
+                    UserAgent: d[10],
+                    Https: d[21],
+                } 
+            });          
+        }
+        // Add data object to array
         dataArray = dataArray.concat(results);
-        return Promise.resolve();        
+        return Promise.resolve();       
     } catch (error) {
         return Promise.reject(error);
     }
