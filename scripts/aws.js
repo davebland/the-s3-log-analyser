@@ -10,6 +10,9 @@ var errorStack = [];
 var s3;
 var dataArray = [];
 
+var testDataS3 = `acea1d36a41f52c5432d6d490e825a08cdca9707571786b815c557e6940ec384 daveb.me.uk [14/Mar/2019:16:26:37 +0000] 157.55.39.63 - 82BA8AA0D5BA6649 WEBSITE.GET.OBJECT index.html "GET / HTTP/1.1" 200 - 195 195 69 69 "-" "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)" - - A4+LRBmK5nKJOwpWhBqCIqrvPhVCXw75oVvyl/xXxfTuo42mk3Lff3Ah/R7V4h3gLeqVQhNsgGs= - - - daveb.me.uk` // TEMP
+var testDataCF = `2019-06-05	12:13:22	SEA19	574	54.212.180.101	GET	d3b19qjblu2xca.cloudfront.net	/	301	-	Go-http-client/1.1	-	-	Redirect	erWxwdksn2n2ozxSVRUk6fotC6hZXI3O4xRuuGrx247HL7uU1t1l5g==	daveb.me.uk	http	92	0.001	-	-	-	Redirect	HTTP/1.1` // TEMP
+
 // Object Constructors
 function AwsObjectListItem(objectKey) {
     this.objectKey = objectKey;
@@ -99,7 +102,7 @@ function awsGetObjects(awsGetList) {
     let loadedLogsCounter = 0;
     $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
     // Reset dataArray
-    dataArray = [];
+    dataArray = [];    
     // Create an array of promises (one for each file to be retrieved)
     let promiseArray = [];
     awsGetList.forEach(function(listItem) {
@@ -143,8 +146,8 @@ function awsGetObjects(awsGetList) {
     return Promise.all(promiseArray);
 }
 
+// Parse response to JS object & add to dataArray
 function parseLogFileContent(content, type) {
-    // Parse response to JS object & add to results array
     // Remove spaces followed by + (time)
     let searchExpression = / (?=\+)/gm;
     content = content.replace(searchExpression, "");
@@ -154,36 +157,40 @@ function parseLogFileContent(content, type) {
     // Remove lines starting with # (.gz header lines)
     searchExpression = /#[^\n]*\n/gm;
     content = content.replace(searchExpression, "");
-    console.log(content);
     // Create space delimeted parser for S3 Logs
     let parser = d3.dsvFormat(" ");
     // Parse data from the log row into an object according to type, ignore unwanted fields
-    let results = [];
+    let parseResult = [];
     try {                   
         if (type == "S3Log") {
-            results = parser.parseRows(content, function(d, i) { 
+            parseResult = parser.parseRows(content, function(d, i) {
+                // Remove invalid characters in date format
+                d[2] = d[2].replace(/[\[\]]/g,'');
+                d[2] = d[2].replace(/:/,' ');
+                // Correct type on other values as we go 
                 return {
-                    TimeDate: d[2],
+                    TimeDate: new Date(d[2]),
                     Operation: d[6],
                     FileRequested: d[7],
-                    HttpStatus: d[9],
-                    BytesSent: d[11],
-                    TotalTime: d[13],
+                    HttpStatus: +d[9],
+                    BytesSent: +d[11],
+                    TotalTime: +d[13],
                     Referrer: d[15],
                     UserAgent: d[16],
-                    Https: d[20],
-                }
+                    Https: d[20]
+                };                                        
             });
         } else {
             // Assume CloudFront if not S3
-            results = d3.tsvParseRows(content, function(d, i) {             
+            parseResult = d3.tsvParseRows(content, function(d, i) {             
                 return {
-                    TimeDate: d[0] + d[1],
+                    // Correct type on other values as we go
+                    TimeDate: new Date(`${d[0]} ${d[1]}`),
                     Operation: d[5],
                     FileRequested: d[7],
-                    HttpStatus: d[8],
-                    BytesSent: d[3],
-                    TotalTime: d[17],
+                    HttpStatus: +d[8],
+                    BytesSent: +d[3],
+                    TotalTime: +d[17],
                     Referrer: d[9],
                     UserAgent: d[10],
                     Https: d[21],
@@ -191,8 +198,8 @@ function parseLogFileContent(content, type) {
             });          
         }
         // Add data object to array
-        dataArray = dataArray.concat(results);
-        return Promise.resolve();       
+        dataArray = dataArray.concat(parseResult);
+        return Promise.resolve();    
     } catch (error) {
         return Promise.reject(error);
     }
