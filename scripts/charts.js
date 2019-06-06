@@ -13,6 +13,7 @@ function displayData() {
     chartRequestsByType(ndx);
     chartRequestsByUserAgent(ndx);
     chartResponseByHttpStatus(ndx);
+    chartBytesSentOverTime(ndx);
 
     // Display charts
     dc.renderAll();
@@ -69,4 +70,21 @@ function chartResponseByHttpStatus(ndx) {
     dc.pieChart("#chart-response-by-http-status")
         .dimension(httpStatusDim)
         .group(countGroup);
+}
+
+// Bytes sent over time line graph
+function chartBytesSentOverTime(ndx) {
+    // Create bytes sent dimension then group reduce to sum of bytes sent each day
+    let dateDim = ndx.dimension(dc.pluck('TimeDate'));
+    let countGroup = dateDim.group(function(dim) {return d3.timeFormat('%d/%m/%Y')(dim)}).reduceSum(function(d) { return d.BytesSent; })
+
+    // Get max & min dates
+    let minDate = dateDim.bottom(1)[0].TimeDate;
+    let maxDate = dateDim.top(1)[0].TimeDate;
+
+    // Create graph
+    dc.lineChart("#chart-requests-over-time")
+        .dimension(dateDim)
+        .group(countGroup)
+        .x(d3.scaleTime().domain([minDate,maxDate]));
 }

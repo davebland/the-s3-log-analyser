@@ -169,19 +169,29 @@ function parseLogFileContent(content, type) {
             parseResult = parser.parseRows(content, function(d, i) {
                 // Remove invalid characters in date format
                 d[2] = d[2].replace(/[\[\]]/g,'');
-                d[2] = d[2].replace(/:/,' ');
+                d[2] = d[2].replace(/:/,' ');                
                 // Correct type on other values as we go 
                 return {
                     TimeDate: new Date(d[2]),
                     Operation: d[6],
                     FileRequested: d[7],
                     HttpStatus: +d[9],
-                    BytesSent: +d[11],
+                    BytesSent: convertToNumber(d[11]),
                     TotalTime: +d[13],
                     Referrer: d[15],
                     UserAgent: d[16],
                     Https: d[20]
-                };                                        
+                };
+                function convertToNumber(input) {
+                    if (isNaN(+input)) {
+                        // Catch NaN error and save as warning
+                        let errorText = `Error converting to number in ${listItem.objectKey}`;
+                        errorStack.push({type: 'Log File Processing', errorMessage: errorText, severity: 'warning'});
+                        return 0;
+                    } else {
+                        return +input;
+                    }
+                }                                     
             });
         } else {
             // Assume CloudFront if not S3
