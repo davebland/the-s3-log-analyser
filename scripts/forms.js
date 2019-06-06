@@ -207,6 +207,8 @@ function submitFilterForm() {
         // Display the charts
         displayData();
     }).catch(function(error) {
+        // Collect any internal errors and add to stack
+        errorStack.push({type: 'Displaying Data', errorMessage: error.message, severity: 'warning'});
         // Write warning to message area
         $('#status-area-load-logs').text('Logs loaded with some errors...');
         // Call error display function
