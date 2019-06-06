@@ -205,7 +205,7 @@ function submitFilterForm() {
         // Write success to message area
         $('#status-area-load-logs').text('Logs loaded successfully!');
         // Display the charts
-        
+        displayData();
     }).catch(function(error) {
         // Write warning to message area
         $('#status-area-load-logs').text('Logs loaded with some errors...');

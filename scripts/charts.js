@@ -15,11 +15,11 @@ function displayData() {
     dc.renderAll();
 }
 
-// Request over time line graph
+// Requests over time line graph
 function chartRequestsOverTime(ndx) {
     // Create date dimension & group by count
     let dateDim = ndx.dimension(dc.pluck('TimeDate'));
-    let countGroup = dateDim.group().reduceCount();
+    let countGroup = dateDim.group();
 
     // Get max & min dates
     let minDate = dateDim.bottom(1)[0].TimeDate;
@@ -30,5 +30,4 @@ function chartRequestsOverTime(ndx) {
         .dimension(dateDim)
         .group(countGroup)
         .x(d3.scaleTime().domain([minDate,maxDate]));
-        //.xUnits(d3.timeDays);
 }

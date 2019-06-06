@@ -71,5 +71,6 @@ Scripts loaded after HTML via defer attribute. All JS & CSS minified for size.
 - wireframe.cc (online wireframing tool)
 - Bootstrap official documentation
 - jQuery officail documentation
+- https://animateddata.co.uk/articles/crossfilter/
 - HTML5 validator https://validator.w3.org/
 - CSS3 validator https://jigsaw.w3.org/css-validator/
