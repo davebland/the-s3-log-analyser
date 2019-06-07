@@ -6,6 +6,10 @@ A web application to retrieve two common types of log files stored in Amazon's W
 
 Remote IP addresses ignored for data protection, displayed protocol instead.
 
+Type is differentiated between S3 Logs and CloudFront as they conflict + gz.
+
+Log file date derived from file name rather than date modified property.
+
 ## Demo
 
 ## UX
@@ -48,6 +52,8 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
         - d3.js (5.9.2)
 
 ## Testing
+
+Test files in demo bucket.
 
 ### Technical Challenges
 
