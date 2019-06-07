@@ -4,7 +4,7 @@ Interactive Frontend Development Milestone Project for Code Institute.
 
 A web application to retrieve two common types of log files stored in Amazon's Web Services (AWS) object storage system (S3). The data contained in the log files is access records for an S3 bucket or CloudFront distribution and the app visualises it for the user as charts & tables.
 
-Remote IP addresses ignored for data protection.
+Remote IP addresses ignored for data protection, displayed protocol instead.
 
 ## Demo
 
@@ -33,6 +33,7 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 
 - Manage different types of log files
 - Display dates in other time zones
+- Firefox doesn't support regex look behind assertion and prevents script load
 
 ## Technologies
 

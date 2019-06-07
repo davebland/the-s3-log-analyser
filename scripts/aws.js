@@ -50,7 +50,7 @@ function awsListObjects(awsCreds) {
         function listObjectLoop(NextContinuationToken) {
             // Set additional S3 parameters including continuation token if available          
             let s3Options = {
-                MaxKeys: 50                            
+                MaxKeys: 100                            
             };
             if (NextContinuationToken) {
                 s3Options.ContinuationToken = NextContinuationToken;
@@ -180,7 +180,7 @@ function parseLogFileContent(content, type) {
                     TotalTime: +d[13],
                     Referrer: d[15],
                     UserAgent: d[16],
-                    Https: d[20]
+                    Protocol: d[20]
                 };
                 function convertToNumber(input) {
                     if (isNaN(+input)) {
@@ -206,7 +206,7 @@ function parseLogFileContent(content, type) {
                     TotalTime: +d[17],
                     Referrer: d[9],
                     UserAgent: d[10],
-                    Https: d[21],
+                    Protocol: d[21],
                 } 
             });          
         }

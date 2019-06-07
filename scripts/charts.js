@@ -14,6 +14,10 @@ function displayData() {
     chartRequestsByUserAgent(ndx);
     chartResponseByHttpStatus(ndx);
     chartBytesSentOverTime(ndx);
+    chartRequestsByProtocol(ndx);
+    // Generate leaderboards
+    leaderboardFilesByCount(ndx);
+    leaderboardFilesByTime(ndx);
 
     // Display charts
     dc.renderAll();
@@ -74,17 +78,97 @@ function chartResponseByHttpStatus(ndx) {
 
 // Bytes sent over time line graph
 function chartBytesSentOverTime(ndx) {
-    // Create bytes sent dimension then group reduce to sum of bytes sent each day
-    let dateDim = ndx.dimension(dc.pluck('TimeDate'));
-    let countGroup = dateDim.group(function(dim) {return d3.timeFormat('%d/%m/%Y')(dim)}).reduceSum(function(d) { return d.BytesSent; })
+    // Create date dimension by day only then group by day and sum bytes sent
+    let dateDim = ndx.dimension(function(d) { return d.TimeDate.setHours(0,0,0,0)});
+    let countGroup = dateDim.group().reduceSum(dc.pluck('BytesSent'));
 
-    // Get max & min dates
+    // Get max & min dates (+/-1) plus range of dates between
     let minDate = dateDim.bottom(1)[0].TimeDate;
     let maxDate = dateDim.top(1)[0].TimeDate;
 
     // Create graph
-    dc.lineChart("#chart-requests-over-time")
+    dc.lineChart("#chart-bytes-sent-over-time")
         .dimension(dateDim)
         .group(countGroup)
         .x(d3.scaleTime().domain([minDate,maxDate]));
+}
+
+// Request by encryption bar chart
+function chartRequestsByProtocol(ndx) {
+    // Create protocol dimension and group
+    let protocolDim = ndx.dimension(dc.pluck('Protocol'));
+    let countGroup = protocolDim.group();
+
+    // Create graph
+    dc.barChart("#chart-requests-by-protocol")
+        .dimension(protocolDim)
+        .group(countGroup)
+        .x(d3.scaleOrdinal())
+        .xUnits(dc.units.ordinal);
+}
+
+// File requested by count leaderboard
+function leaderboardFilesByCount(ndx) {
+    // Create file requested dimension and group by count of requests
+    let fileDim = ndx.dimension(dc.pluck('FileRequested'));
+    let countGroup = fileDim.group();
+
+    // Create leaderboard
+    dc.dataTable("#leaderboard-files-by-count")        
+        .dimension(countGroup)
+        .columns([
+            {
+                label: "File",
+                format: function (d) { return d.key; }
+            },
+            {
+                label: "Count",
+                format: function (d) { return d.value; }
+            }
+        ])
+        .order(d3.descending);
+}
+
+// File requested by processing time leaderboard
+function leaderboardFilesByTime(ndx) {
+    // Create file requested dimension and group by average time to process
+    let fileDim = ndx.dimension(dc.pluck('FileRequested'));
+    let countGroup = fileDim.group().reduce(avgAdd,avgRemove,avgInitial);
+
+    // Time taken averaging functions
+    function avgAdd(p, v) {
+        p.count++;
+        p.total += v.TotalTime;
+        p.avg = p.total / p.count;
+        return p;
+    }    
+    function avgRemove(p, v) {
+        p.count--;
+        if (p.count == 0) {
+            p.total = 0;
+            p.avg = 0;
+        } else {
+            p.total -= v.TotalTime;
+            p.avg = p.total / p.count; 
+        }
+        return p;
+    }    
+    function avgInitial() {
+        return {count: 0, total: 0, avg: 0};
+    }
+
+    // Create leaderboard
+    dc.dataTable("#leaderboard-files-by-time")        
+        .dimension(countGroup)
+        .columns([
+            {
+                label: "File",
+                format: function (d) { return d.key; }
+            },
+            {
+                label: "Processing Time",
+                format: function (d) { return d.value.avg; }
+            }
+        ])
+        .order(d3.descending);
 }
