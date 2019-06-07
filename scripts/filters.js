@@ -182,10 +182,11 @@ function updateSelectedLogFiles() {
 function changeFilters() {
     // Clear chart display area
 
-    // Re-enable filter form elements
+    // Re-enable filter form elements & highlight section
     enableFilterByTypeForm(true);
     enableFilterByDateForm(true);
     enableFilterByPresetForm(true);
+    $('#section-filter-logs').addClass('highlight-form');
 }
 /** Test Data **/
 

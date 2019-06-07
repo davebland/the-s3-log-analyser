@@ -23,8 +23,9 @@ function displayErrors() {
 };
 
 function errorModalGoBack() {
-    // Re Enable creds form
+    // Re-enable and hightlight creds form
     enableCredsForm(true);
+    $('#section-api-creds').addClass('highlight-form');
     // Clear message areas
     clearApiMessageArea();
     clearLoadLogsMessageArea();

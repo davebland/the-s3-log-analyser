@@ -21,12 +21,16 @@ getAwsRegions();
 // Enable/disable API Credentials form
 function enableCredsForm(yes) {
     if (yes) {
-        //Enable form fields & buttons
+        // Highlight section
+        $('#section-api-creds').addClass('highlight-form');
+        // Enable form fields & buttons
         $('#form-api-creds :input').prop('disabled', false);
         $('#buttons-load-saved :input').prop('disabled', false);
         // Check saved creds button state having just enabled it
         checkSavedCredsButtonState();
     } else {
+        // Un-highlight section
+        $('#section-api-creds').removeClass('highlight-form');
         //Disable form fields & buttons
         $('#form-api-creds :input').prop('disabled', true);
         $('#buttons-load-saved :input').prop('disabled', true);
@@ -36,6 +40,8 @@ function enableCredsForm(yes) {
 // Enable/disable Filter Logs form by type
 function enableFilterByTypeForm(yes) {
     if (yes) {
+        // Highlight section
+        $('#section-filter-logs').addClass('highlight-form');
         //Enable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', false);
     } else {
@@ -109,6 +115,9 @@ function resetPage() {
     // Clear message areas
     clearApiMessageArea();
     clearLoadLogsMessageArea();
+    // Highlight creds form and un-highlight filter form
+    $('#section-api-creds').addClass('highlight-form');
+    $('#section-filter-logs').removeClass('highlight-form');
     // Clear down application wide variablse
     errorStack = [];
     awsObjectList = [];
@@ -155,8 +164,9 @@ function getAwsRegions() {
 // Triggered on submission of credentials form
 function submitCredsForm(formCreds) {
 
-    // Disable creds form whilst processing
+    // Disable creds form and un-highlight whilst processing
     enableCredsForm(false);
+    $('#section-filter-logs').removeClass('highlight-form');
 
     // Write loading to message area
     $('#message-area-api-connect-loading').text('Loading...');
@@ -189,10 +199,11 @@ function submitCredsForm(formCreds) {
 
 // Triggered on submission of filter form
 function submitFilterForm() {
-    // Disable filter form whilst processing
+    // Disable filter form and un-highlight whilst processing
     enableFilterByTypeForm(false);
     enableFilterByDateForm(false);
     enableFilterByPresetForm(false);
+    $('#section-filter-logs').removeClass('highlight-form');
 
     // Write loading to message area
     $('#status-area-load-logs').text('Loading...');

@@ -135,9 +135,9 @@ function awsGetObjects(awsGetList) {
                 });  
             }).catch(function(apiError) {
                 // Catch API errors and save as fatal
-                let errorText = `Error getting file ${listItem.objectKey} - ${apiError.message}`;
+                let errorText = `Could not get file ${listItem.objectKey} - ${apiError.message}`;
                 errorStack.push({type: 'AWS API', errorMessage: errorText, severity: 'fatal'});
-                reject();
+                resolve();
             });
         })            
         // Add the promise to the array

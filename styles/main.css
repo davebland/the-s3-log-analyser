@@ -12,16 +12,16 @@ header {
 
 #section-api-creds {
     background-color: whitesmoke;
-    border: 1px solid blue;
+    border: 1px solid darkgray;
 }
 
 #message-area-api-connect {
-    border: 1px solid blue;
+    
 }
 
 #section-filter-logs {
     background-color: whitesmoke;
-    border: 1px solid blue;
+    border: 1px solid darkgray;
 }
 
 #message-area-load-logs {
@@ -29,7 +29,6 @@ header {
 }
 
 #section-visualise-data {
-    border: 1px solid blue;
     background-color: darkgray;
 }
 
@@ -71,10 +70,6 @@ footer {
 
 /** TEMP **/
 
-.row {
-    //border: 1px solid red;
-}
-
 /** Form Styles **/
 
 .space-vertically {
@@ -85,6 +80,10 @@ footer {
 
 .vertically-spaced-item {
     flex: auto;
+}
+
+.highlight-form {
+    box-shadow: 0 0 3px 3px green;
 }
 
 /** Message Areas **/
