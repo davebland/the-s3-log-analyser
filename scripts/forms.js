@@ -272,8 +272,8 @@ function loadDemoCredentials() {
     // Get demo creds from file (tbd)
 
     // Input data into form fields
-    $('#access-key-id').val('AKIASVQN7V6SPN23ELFW');
-    $('#access-key-secret').val('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');
+    $('#access-key-id').val('');
+    $('#access-key-secret').val('');
     $('#aws-region-select').val('eu-west-2');
     $('#bucket-name').val('demo.the-s3-log-analyser');
 }
