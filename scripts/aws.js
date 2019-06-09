@@ -50,7 +50,7 @@ function awsListObjects(awsCreds) {
         function listObjectLoop(NextContinuationToken) {
             // Set additional S3 parameters including continuation token if available          
             let s3Options = {
-                MaxKeys: 100                            
+                MaxKeys: 500                            
             };
             if (NextContinuationToken) {
                 s3Options.ContinuationToken = NextContinuationToken;

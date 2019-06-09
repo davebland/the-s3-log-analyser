@@ -158,12 +158,11 @@ function getAwsRegions() {
     $('#aws-region-select option[value="eu-west-2"]').attr("selected", true);
 }
     
-
 /* FORM SUBMISSION */
 
 // Triggered on submission of credentials form
 function submitCredsForm(formCreds) {
-
+    
     // Disable creds form and un-highlight whilst processing
     enableCredsForm(false);
     $('#section-filter-logs').removeClass('highlight-form');
@@ -187,8 +186,12 @@ function submitCredsForm(formCreds) {
             // Enable filter form
             enableFilterByTypeForm(true);
         }).catch(function(error) {
+            // Update message area
+            $('#message-area-api-connect-loading').text('Loaded, but with some errors...');            
+            // Enable filter form
+            enableFilterByTypeForm(true);
             // Call error display function
-            displayErrors();                              
+            displayErrors();                    
         });
 
     // Save creds
@@ -272,7 +275,7 @@ function loadDemoCredentials() {
     // Get demo creds from file (tbd)
 
     // Input data into form fields
-    $('#access-key-id').val('');
+    $('#access-key-id').val('AKIASVQN7V6SIMIAYWHC');
     $('#access-key-secret').val('');
     $('#aws-region-select').val('eu-west-2');
     $('#bucket-name').val('demo.the-s3-log-analyser');

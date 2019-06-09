@@ -23,7 +23,8 @@ function displayErrors() {
 };
 
 function errorModalGoBack() {
-    // Re-enable and hightlight creds form
+    // Disable filter form, re-enable and hightlight creds form
+    enableFilterByTypeForm(false)
     enableCredsForm(true);
     $('#section-api-creds').addClass('highlight-form');
     // Clear message areas

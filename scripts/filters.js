@@ -112,23 +112,16 @@ function displayListStats(objectListStats) {
     // Update removed count
     $('#message-area-api-connect-removed-count').html(`Files Ignored: <i>${objectListStats.removedCount}</i>`);
     // Update form elements using min max dates
+    let dateFormat = d3.timeFormat('%Y-%m-%d');
     $('#info-date-max').text(objectListStats.maxDate.toDateString());
-    $('#date-max').attr('min', createDateString(objectListStats.minDate));
-    $('#date-max').attr('max', createDateString(objectListStats.maxDate));
-    $('#date-max').val(createDateString(objectListStats.maxDate));
+    $('#date-max').attr('min', dateFormat(objectListStats.minDate));
+    $('#date-max').attr('max', dateFormat(objectListStats.maxDate));
+    $('#date-max').val(dateFormat(objectListStats.maxDate));
     $('#info-date-min').text(objectListStats.minDate.toDateString());
-    $('#date-min').attr('min', createDateString(objectListStats.minDate));
-    $('#date-min').attr('max', createDateString(objectListStats.maxDate));
-    $('#date-min').val(createDateString(objectListStats.minDate));
+    $('#date-min').attr('min', dateFormat(objectListStats.minDate));
+    $('#date-min').attr('max', dateFormat(objectListStats.maxDate));
+    $('#date-min').val(dateFormat(objectListStats.minDate));
 
-    function createDateString(dateObject) {
-        // Return date in format yyyy-mm-dd
-        if (dateObject.getMonth() < 9) {
-            return `${dateObject.getFullYear()}-0${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
-        } else {
-            `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
-        }
-    }
     return;
 }
  
