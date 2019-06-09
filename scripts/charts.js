@@ -161,7 +161,7 @@ function leaderboardFilesByTime(ndx) {
         return p;
     }    
     function avgInitial() {
-        return {count: 0, total: 0, avg: 0};
+        return {avg: 0, count: 0, total: 0};
     }
 
     // Create leaderboard
@@ -173,7 +173,7 @@ function leaderboardFilesByTime(ndx) {
                 format: function (d) { return d.key; }
             },
             {
-                label: "Processing Time",
+                label: "Average Processing Time",
                 format: function (d) { return d.value.avg; }
             }
         ])
