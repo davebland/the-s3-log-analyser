@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>The S3 Log Analyser</title>
-
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="./lib/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./lib/css/dc.min.css" />
     <!-- App CSS -->
     <link rel="stylesheet" href="./styles/main.css" />
-
     <!-- JS Libraries -->
     <script defer src="./lib/js/jquery-3.4.1.min.js"></script>
     <script defer src="./lib/js/bootstrap.bundle.min.js"></script>
@@ -174,28 +172,30 @@
         <!-- Visualised Data Section-->
         <section id="section-visualise-data" class="row">
             <div id="chart-requests-over-time" class="col-12 chart">                
-                <h2>Chart1</h2>
+                <h2>Requests Over Time</h2>
             </div>
             <div id="chart-requests-by-type" class="col-md-4 chart">                
-                <h2>Chart2</h2>
+                <h2>Method</h2>
             </div>
             <div id="chart-requests-by-user-agent" class="col-md-4 chart">                
-                <h2>Chart3</h2>
+                <h2>User Agent</h2>
             </div>
             <div id="chart-response-by-http-status" class="col-md-4 chart">                
-                <h2>Chart4</h2>
+                <h2>HTTP Status Code Returned</h2>
             </div>
             <div id="chart-bytes-sent-over-time" class="col-12 chart">                
-                <h2>Chart5</h2>
+                <h2>Bytes Sent Over Time (per day)</h2>
             </div>
             <div id="chart-requests-by-protocol" class="col-md-4 chart">                
-                <h2>Chart6</h2>
+                <h2>HTTP/HTTPS</h2>
             </div>
-            <div id="leaderboard-files-by-count" class="col-md-4 chart">                
-                <h2>Chart7</h2>
+            <div id="" class="col-md-4 chart">                
+                <h2>Top 10 Requested Files</h2>
+                <table id="leaderboard-files-by-count" class="table table-striped"></table>
             </div>
-            <div id="leaderboard-files-by-time" class="col-md-4 chart">                
-                <h2>Chart8</h2>
+            <div id="" class="col-md-4 chart">                
+                <h2>Slowest 10 Loading Files</h2>
+                <table id="leaderboard-files-by-time" class="table table-striped"></table>
             </div>
         </section>
         <!-- Site Footer -->

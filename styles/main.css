@@ -62,13 +62,15 @@ header {
     margin-bottom: 10vh;
 }
 
+.chart {
+    padding: 10px;
+}
+
 footer {
     position: fixed;
     bottom: 0;    
     width: 100vw;
 }
-
-/** TEMP **/
 
 /** Form Styles **/
 

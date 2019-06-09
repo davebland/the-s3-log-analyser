@@ -38,6 +38,7 @@ This application makes it quick and easy for a user to connect to thier AWS S3 b
 - Manage different types of log files
 - Display dates in other time zones
 - Firefox doesn't support regex look behind assertion and prevents script load
+- Change the date filter according to log type selected
 
 ## Technologies
 

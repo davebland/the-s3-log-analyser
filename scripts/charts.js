@@ -48,6 +48,8 @@ function chartRequestsByType(ndx) {
 
     // Create a pie chart
     dc.pieChart("#chart-requests-by-type")
+        .width(() => {return $('#chart-requests-by-type').width();})
+        .height(400)
         .dimension(operationDim)
         .group(countGroup);
 }
@@ -60,6 +62,8 @@ function chartRequestsByUserAgent(ndx) {
 
     // Create a pie chart
     dc.pieChart("#chart-requests-by-user-agent")
+        .width(() => {return $('#chart-requests-by-type').width();})
+        .height(400)
         .dimension(userAgentDim)
         .group(countGroup);
 }
@@ -72,6 +76,8 @@ function chartResponseByHttpStatus(ndx) {
 
     // Create a pie chart
     dc.pieChart("#chart-response-by-http-status")
+        .width(() => {return $('#chart-requests-by-type').width();})
+        .height(400)
         .dimension(httpStatusDim)
         .group(countGroup);
 }
@@ -126,7 +132,8 @@ function leaderboardFilesByCount(ndx) {
                 format: function (d) { return d.value; }
             }
         ])
-        .order(d3.descending);
+        .order(d3.descending)
+        .size(10);
 }
 
 // File requested by processing time leaderboard
@@ -170,5 +177,6 @@ function leaderboardFilesByTime(ndx) {
                 format: function (d) { return d.value.avg; }
             }
         ])
-        .order(d3.descending);
+        .order(d3.descending)
+        .size(10);
 }
