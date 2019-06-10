@@ -23,6 +23,11 @@ function displayData() {
     dc.renderAll();
 }
 
+// Re-render charts if page width changes
+$(window).resize(function() {
+    dc.renderAll();
+});
+
 // Requests over time line graph
 function chartRequestsOverTime(ndx) {
     // Create date dimension & group by count
@@ -43,7 +48,17 @@ function chartRequestsOverTime(ndx) {
 // Requests by type pie chart
 function chartRequestsByType(ndx) {
     // Create type dimension & group by count
-    let operationDim = ndx.dimension(dc.pluck('Operation'));
+    let operationDim = ndx.dimension(function(ndx) {
+        // Select operation by truncating at 2nd . (most operations are xxx.yyy....)
+        let end = ndx.Operation.lastIndexOf(".");
+        if (end > -1) {
+            return ndx.Operation.substring(0,end);
+        } else {
+            // If no 2nd . return full operation
+            return ndx.Operation;
+        }
+        
+    });
     let countGroup = operationDim.group();
 
     // Create a pie chart
@@ -51,7 +66,8 @@ function chartRequestsByType(ndx) {
         .width(() => {return $('#chart-requests-by-type').width();})
         .height(400)
         .dimension(operationDim)
-        .group(countGroup);
+        .group(countGroup)
+        .slicesCap(5);
 }
 
 // Requests by user agent pie chart
@@ -63,9 +79,14 @@ function chartRequestsByUserAgent(ndx) {
     // Create a pie chart
     dc.pieChart("#chart-requests-by-user-agent")
         .width(() => {return $('#chart-requests-by-type').width();})
+        .radius(150)
+        .cy(150)
         .height(400)
         .dimension(userAgentDim)
-        .group(countGroup);
+        .group(countGroup)
+        .slicesCap(5)
+        .label((d) => { return d.key.substr(0,10) + '...';})
+        .legend(dc.legend().x(0).y(300).autoItemWidth(true).gap(5));
 }
 
 // Response by http status pie chart
@@ -79,7 +100,8 @@ function chartResponseByHttpStatus(ndx) {
         .width(() => {return $('#chart-requests-by-type').width();})
         .height(400)
         .dimension(httpStatusDim)
-        .group(countGroup);
+        .group(countGroup)
+        .slicesCap(5);
 }
 
 // Bytes sent over time line graph
@@ -102,7 +124,14 @@ function chartBytesSentOverTime(ndx) {
 // Request by encryption bar chart
 function chartRequestsByProtocol(ndx) {
     // Create protocol dimension and group
-    let protocolDim = ndx.dimension(dc.pluck('Protocol'));
+    let protocolDim = ndx.dimension(function(ndx) {
+        if (ndx.Protocol == '-') {
+            // If no protocol must be HTTP
+            return 'HTTP';            
+        } else {
+            return 'HTTPS';
+        }
+    });
     let countGroup = protocolDim.group();
 
     // Create graph
