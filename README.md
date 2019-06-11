@@ -95,6 +95,7 @@ All content produced by myself other than CSS & JS libraries as documented.
 - wireframe.cc (online wireframing tool)
 - Bootstrap official documentation
 - jQuery official documentation
+- d3, dc & crossfilter official documentation
 - https://animateddata.co.uk/articles/crossfilter/ - helped a lot with understanding crossfilter.
 - HTML5 validator https://validator.w3.org/
 - CSS3 validator https://jigsaw.w3.org/css-validator/

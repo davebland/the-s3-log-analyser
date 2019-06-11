@@ -225,6 +225,9 @@ function submitFilterForm() {
     // Convert list crossfilter to array of keys to retrieve
     let awsGetList = dateDim.top(Infinity);
 
+    // Clear error stack
+    errorStack = [];
+
     // Send get list to aws function & handle promise
     awsGetObjects(awsGetList).then(function(success) {
         // Write success to message area
@@ -238,6 +241,8 @@ function submitFilterForm() {
         $('#status-area-load-logs').text('Logs loaded with some errors...');
         // Call error display function
         displayErrors();
+        // Display the charts
+        displayData();
     });
 
     return false; 

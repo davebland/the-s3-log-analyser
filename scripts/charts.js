@@ -113,18 +113,19 @@ function chartResponseByHttpStatus(ndx) {
 // Bytes sent over time line graph
 function chartBytesSentOverTime(ndx) {
     // Create date dimension by day only then group by day and sum bytes sent
-    let dateDim = ndx.dimension(function(d) { return d.TimeDate.setHours(0,0,0,0)});
+    let dateDim = ndx.dimension(function(d) { return d3.timeDay(d.TimeDate)});
     let countGroup = dateDim.group().reduceSum(dc.pluck('BytesSent'));
 
-    // Get max & min dates (+/-1) plus range of dates between
-    let minDate = dateDim.bottom(1)[0].TimeDate;
+    // Get max & min dates (+/-1) plus range of dates between for x axis
+    let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
     let maxDate = dateDim.top(1)[0].TimeDate;
 
     // Create graph
-    dc.lineChart("#chart-bytes-sent-over-time")
+    dc.barChart("#chart-bytes-sent-over-time")
         .dimension(dateDim)
         .group(countGroup)
-        .x(d3.scaleTime().domain([minDate,maxDate]));
+        .x(d3.scaleTime().domain([minDate,maxDate]))
+        .xUnits(d3.timeDays);
 }
 
 // Request by encryption bar chart
