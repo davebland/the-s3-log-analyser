@@ -48,7 +48,7 @@ function enableFilterByTypeForm(yes) {
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', true);
-        $('#button-submit-filter-form').prop('disabled', true);
+        //$('#button-submit-filter-form').prop('disabled', true);
     }
 }
 
@@ -61,7 +61,7 @@ function enableFilterByDateForm(yes) {
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-date :input').prop('disabled', true);
-        $('#button-submit-filter-form').prop('disabled', true);
+        //$('#button-submit-filter-form').prop('disabled', true);
     }
 }
 
