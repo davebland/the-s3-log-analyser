@@ -44,9 +44,11 @@ function enableFilterByTypeForm(yes) {
         $('#section-filter-logs').addClass('highlight-form');
         //Enable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', false);
+        $('#button-submit-filter-form').prop('disabled', false);
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', true);
+        $('#button-submit-filter-form').prop('disabled', true);
     }
 }
 
@@ -55,9 +57,11 @@ function enableFilterByDateForm(yes) {
     if (yes) {
         //Enable form fields & buttons
         $('#fieldset-log-file-date :input').prop('disabled', false);
+        $('#button-submit-filter-form').prop('disabled', false);
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-date :input').prop('disabled', true);
+        $('#button-submit-filter-form').prop('disabled', true);
     }
 }
 
@@ -131,6 +135,7 @@ function resetPage() {
     // Clear down application wide variablse
     errorStack = [];
     awsObjectList = [];
+    ndx = 0;
 }
 
 /* AWS REGION DROPDOWN */
@@ -234,9 +239,9 @@ function submitFilterForm() {
         $('#status-area-load-logs').text('Logs loaded successfully!');
         // Display the charts
         displayData();
-    }).catch(function(error) {
+    }).catch(function(errorObject) {
         // Collect any internal errors and add to stack
-        errorStack.push({type: 'Displaying Data', errorMessage: error.message, severity: 'warning'});
+        errorStack.push(errorObject);
         // Write warning to message area
         $('#status-area-load-logs').text('Logs loaded with some errors...');
         // Call error display function

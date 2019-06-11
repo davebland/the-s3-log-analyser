@@ -128,17 +128,20 @@ function awsGetObjects(awsGetList) {
                     $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
                     resolve();
                 }).catch(function(parseError) {
+                    // Update loaded logs counter
+                    loadedLogsCounter++;
                     // Catch parsing error and save as warning
                     let errorText = `Error processing file ${listItem.objectKey} - ${parseError.message}`;
-                    errorStack.push({type: 'Log File Processing', errorMessage: errorText, severity: 'warning'});
-                    resolve();
+                    let errorObject = {type: 'Log File Processing', errorMessage: errorText, severity: 'fatal'};
+                    reject(errorObject);
                 });  
             }).catch(function(apiError) {
                 // Catch API errors and save as fatal
                 let errorText = `Could not get file ${listItem.objectKey} - ${apiError.message}`;
-                errorStack.push({type: 'AWS API', errorMessage: errorText, severity: 'fatal'});
-                resolve();
+                let errorObject = {type: 'AWS API', errorMessage: errorText, severity: 'fatal'};
+                reject(errorObject);
             });
+
         })            
         // Add the promise to the array
         promiseArray.push(s3GetRequest);
@@ -184,9 +187,8 @@ function parseLogFileContent(content, type) {
                 };
                 function convertToNumber(input) {
                     if (isNaN(+input)) {
-                        // Catch NaN error and save as warning
-                        let errorText = `Error converting to number in ${listItem.objectKey}`;
-                        errorStack.push({type: 'Log File Processing', errorMessage: errorText, severity: 'warning'});
+                        // Catch NaN error
+                        new Error('Error converting to number');
                         return 0;
                     } else {
                         return +input;
