@@ -6,7 +6,7 @@ A web application to retrieve two common types of log files stored in Amazon's W
 
 Log files are retrieved using the AWS API with login credentials supplied by the user. Users have the option to store their credentials in their local browser for future session & all of the processing of the data is also done locally.
 
-Remote IP addresses in the access logs are ignored to anonymise the date.
+Remote IP addresses in the access logs are ignored to anonymise the data.
 
 ## Demo
 
@@ -94,7 +94,7 @@ All content produced by myself other than CSS & JS libraries as documented.
 
 - wireframe.cc (online wireframing tool)
 - Bootstrap official documentation
-- jQuery officail documentation
+- jQuery official documentation
 - https://animateddata.co.uk/articles/crossfilter/ - helped a lot with understanding crossfilter.
 - HTML5 validator https://validator.w3.org/
 - CSS3 validator https://jigsaw.w3.org/css-validator/

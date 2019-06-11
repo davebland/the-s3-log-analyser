@@ -8,6 +8,10 @@ function displayData() {
     // Create crossfilter of data
     let ndx = crossfilter(dataArray);
 
+    // Remove holding notice & show chart containers
+    $('#heading-no-data').hide();
+    $('#section-visualise-data article').show();
+
     // Generate charts
     chartRequestsOverTime(ndx);
     chartRequestsByType(ndx);
@@ -19,6 +23,8 @@ function displayData() {
     leaderboardFilesByCount(ndx);
     leaderboardFilesByTime(ndx);
 
+    // Scroll to charts
+    $(window).scrollTop($('#message-area-load-logs').offset().top - $('header').height());
     // Display charts
     dc.renderAll();
 }

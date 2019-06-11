@@ -95,9 +95,11 @@ function clearApiMessageArea() {
     $('#message-area-api-connect div').empty();
 }
 
-// Clear Load Logs message area
+// Clear & hide Load Logs message area
 function clearLoadLogsMessageArea() {
     $('#message-area-load-logs div').empty();
+    $('#message-area-load-logs div').hide();
+
 }
 
 /* RESETS */
@@ -112,12 +114,20 @@ function resetPage() {
     enableFilterByTypeForm(false);
     enableFilterByDateForm(false);
     enableFilterByPresetForm(false);
+    // Clear filter form date displays
+    $('#info-date-min').empty();
+    $('#info-date-max').empty();
     // Clear message areas
     clearApiMessageArea();
     clearLoadLogsMessageArea();
+    // Add holding notice & remove chart containers
+    $('#heading-no-data').show();
+    $('#section-visualise-data article').hide();
     // Highlight creds form and un-highlight filter form
     $('#section-api-creds').addClass('highlight-form');
     $('#section-filter-logs').removeClass('highlight-form');
+    // Scroll back to the top of the page
+    $(window).scrollTop();
     // Clear down application wide variablse
     errorStack = [];
     awsObjectList = [];
@@ -208,7 +218,8 @@ function submitFilterForm() {
     enableFilterByPresetForm(false);
     $('#section-filter-logs').removeClass('highlight-form');
 
-    // Write loading to message area
+    // Show & write loading to message area
+    $('#message-area-load-logs div').show();
     $('#status-area-load-logs').text('Loading...');
 
     // Convert list crossfilter to array of keys to retrieve

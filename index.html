@@ -84,7 +84,7 @@
                 </form>                                                                                                             
             </section>
             <!-- API Connect Message Area -->
-            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">                
+            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">            
                 <!-- Filled by JS -->
                 <div id="message-area-api-connect-loading"></div>
                 <div id="message-area-api-connect-counter"></div>
@@ -161,7 +161,6 @@
         <!-- Load Logs Message Area -->
         <div id="message-area-load-logs" class="row align-items-center">
             <div class="col-9 m-2">
-                <h3>Load Logs Message Area</h3>
                 <div id="status-area-load-logs"><!--JS--></div>
                 <div id="message-area-loaded-counter"><!--JS--></div>
             </div>
@@ -171,38 +170,40 @@
         </div>        
         <!-- Visualised Data Section-->
         <section id="section-visualise-data" class="row">
-            <div id="chart-requests-over-time" class="col-12 chart">                
+            <div class="badge badge-info m-2">Chart Area</div>
+            <h2 id="heading-no-data" class="text-center"><i>Nothing to show, use controls above to load some data ^</i></h2>
+            <article id="chart-requests-over-time" class="col-12 chart">                
                 <h2>Requests Over Time</h2>
                 <!-- DC Chart Here -->
-            </div>
-            <div id="chart-requests-by-type" class="col-md-4 chart">                
+            </article>
+            <article id="chart-requests-by-type" class="col-md-4 chart">                
                 <h2>Method</h2>
                 <!-- DC Chart Here -->
-            </div>
-            <div id="chart-requests-by-user-agent" class="col-md-4 chart">                
+            </article>
+            <article id="chart-requests-by-user-agent" class="col-md-4 chart">                
                 <h2>User Agent</h2>
                 <!-- DC Chart Here -->
-            </div>
-            <div id="chart-response-by-http-status" class="col-md-4 chart">                
+            </article>
+            <article id="chart-response-by-http-status" class="col-md-4 chart">                
                 <h2>HTTP Status Code Returned</h2>
                 <!-- DC Chart Here -->
-            </div>
-            <div id="chart-bytes-sent-over-time" class="col-12 chart">                
+            </article>
+            <article id="chart-bytes-sent-over-time" class="col-12 chart">                
                 <h2>Bytes Sent Over Time (per day)</h2>
                 <!-- DC Chart Here -->
-            </div>
-            <div id="chart-requests-by-protocol" class="col-md-4 chart">                
+            </article>
+            <article id="chart-requests-by-protocol" class="col-md-4 chart">                
                 <h2>HTTP/HTTPS</h2>
                 <!-- DC Chart Here -->
-            </div>
-            <div id="" class="col-md-4 chart">                
+            </article>
+            <article id="" class="col-md-4 chart">                
                 <h2>Top 10 Requested Files</h2>
                 <table id="leaderboard-files-by-count" class="table table-striped"><!-- DC Table Here --></table>
-            </div>
-            <div id="" class="col-md-4 chart">                
+            </article>
+            <article id="" class="col-md-4 chart">                
                 <h2>Slowest 10 Loading Files</h2>
                 <table id="leaderboard-files-by-time" class="table table-striped"><!-- DC Table Here --></table>
-            </div>
+            </article>
         </section>
         <!-- Site Footer -->
         <footer class="row justify-content-center align-items-center">
