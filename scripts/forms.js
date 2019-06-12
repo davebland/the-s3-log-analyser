@@ -48,7 +48,6 @@ function enableFilterByTypeForm(yes) {
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', true);
-        //$('#button-submit-filter-form').prop('disabled', true);
     }
 }
 
@@ -61,7 +60,6 @@ function enableFilterByDateForm(yes) {
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-date :input').prop('disabled', true);
-        //$('#button-submit-filter-form').prop('disabled', true);
     }
 }
 
@@ -217,12 +215,12 @@ function submitCredsForm(formCreds) {
 
 // Triggered on submission of filter form
 function submitFilterForm() {
-    // Disable filter form and un-highlight whilst processing
+    // Disable filter form & submit button and un-highlight whilst processing
     enableFilterByTypeForm(false);
     enableFilterByDateForm(false);
     enableFilterByPresetForm(false);
+    $('#button-submit-filter-form').prop('disabled', true);
     $('#section-filter-logs').removeClass('highlight-form');
-
     // Show & write loading to message area
     $('#message-area-load-logs div').show();
     $('#status-area-load-logs').text('Loading...');
