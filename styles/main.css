@@ -17,7 +17,11 @@ header {
     border: 1px solid darkgray;
 }
 
-#message-area-api-connect table {
+#table-object-count {
+    font-size: 1em;
+}
+
+#table-object-stats {
     font-size: 0.7em;
 }
 
@@ -30,7 +34,10 @@ header {
 
 }
 
-#section-visualise-data {
+#section-visualise-data {    
+}
+
+.chart-area-background {
     background-color: darkgray;
 }
 
@@ -100,8 +107,22 @@ footer {
     box-shadow: 0 0 3px 3px green;
 }
 
+#arrow-left {
+    transform: rotate(25deg);
+}
+
+#arrow-right {
+    transform: rotate(-25deg);
+}
+
 /** Message Areas **/
 
 #message-area-api-connect div {
-    padding: 1rem 0;
+
+}
+
+/** Bootstrap Overrides **/
+
+.fas {
+    font-size: 2em;
 }

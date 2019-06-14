@@ -49,10 +49,10 @@
         <div class="row justify-content-around">
             <!-- API Credentials Section -->
             <section id="section-api-creds" class="col-11 col-lg-5 m-2 py-2 rounded highlight-form">                
-                <h2 class="text-center">Enter AWS API Credentials</h2>
+                <h2 class="text-center">Connect to an S3 Bucket</h2>
                 <div class="row align-items-center">
                     <div class="col-md-9 text-center text-md-left">
-                        <p>Enter you AWS credentials below or select a saved option from above. You will need to have read access to an S3 bucket, take a look at the help for
+                        <p>Enter you AWS credentials below (or load some saved ones if you have been here before). You will need to have read access to an S3 bucket, take a look at the help for
                             more information. Credentials are <u>never</u> transmitted to our servers, saved credentials are stored in your browser.</p>
                     </div>
                     <div class="col-md-3 text-center mb-3">
@@ -63,9 +63,9 @@
                 <div id="buttons-load-saved">
                     <div class="btn-group" id="buttons-load-local-saved" role="group">
                         <button type="button" class="btn btn-secondary" onclick="loadSavedCreds();" disabled>Load Saved</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearSavedCreds();" disabled><small>Clear</small></button>                         
+                        <button type="button" class="btn btn-danger" onclick="clearSavedCreds();" disabled><small>Clear</small></button>                         
                     </div>
-                    <button class="btn btn-warning float-right" onclick="loadDemoCredentials();">Load DEMO</button>
+                    <button class="btn btn-warning float-right" onclick="loadDemoCredentials();">Use DEMO Creds</button>
                 </div>                                             
                 <!-- Enter AWS Credentials Form -->
                 <form id="form-api-creds" class="mt-3" onsubmit="return submitCredsForm(this);">
@@ -91,7 +91,7 @@
                     </div>
                     <div class="row align-items-center">
                         <div class="col">                        
-                            <button type="submit" class="btn btn-outline-success btn-sm my-3" onclick="saveCredsFlag = false;">Connect without saving credentials</button> 
+                            <button type="submit" class="btn btn-outline-success btn-sm my-3" onclick="saveCredsFlag = false;">Connect without saving credentials in browser</button> 
                         </div>
                         <div class="col text-right">
                             <button type="submit" class="btn btn-success btn-lg my-3" onclick="saveCredsFlag = true;">Connect</button>
@@ -101,15 +101,22 @@
             </section>
             <!-- API Connect Message Area -->
             <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">                            
-                <div id="message-area-api-connect-loading"><!-- JS --></div>
-                <table class="table table-sm">
+                <div id="message-area-api-connect-loading">
+                    <div class="spinner-border" role="status"></div>     
+                    <!-- JS -->
+                </div>
+                <table id="table-object-count" class="table table-sm table-bordered">
                     <tr>
-                        <td>Objects Found</td>
+                        <td>Objects</td>
                         <td id="message-area-api-connect-counter"><!-- JS --></td>
                     </tr>
-                    <tr>
-                        <td><strong>Files</strong></td>
-                    </tr>
+                </table>
+                <table id="table-object-stats" class="table table-sm table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th colspan="2"><strong>Log Types</strong></th>
+                        </tr>     
+                    </thead>
                     <tr>
                         <td>S3</td>
                         <td id="message-area-api-connect-other-count"><!-- JS --></td>
@@ -119,20 +126,20 @@
                         <td id="message-area-api-connect-gz-count"><!-- JS --></td>
                     </tr>
                     <tr>
-                        <td>Ignored</td>
+                        <td><i>Ignored</i></td>
                         <td id="message-area-api-connect-removed-count"><!-- JS --></td>
-                    </tr>
+                    </tr>                   
                 </table>
                 <div class="">
                     <i class="fas fa-arrow-circle-right"></i><br>
-                    Now Select Some Log Dates to View
+                    Now Select By Date
                 </div>
             </div>           
             <!-- Filter Log Files Section -->
             <section id="section-filter-logs" class="col-11 col-lg-5 m-2 py-2 rounded">                                                        
                 <div class="text-center">
                     <h2>Filter Log Files</h2>
-                    <small>Select type and filter by date or use the preset options.</small>
+                    <small>Select the type of log files to visualise</small>
                 </div>                               
                 <!-- Filter Log Files Form -->
                 <form id="form-filter-log-files" onsubmit="return submitFilterForm();">
@@ -147,6 +154,11 @@
                             <label class="custom-control-label" for="type-cloudfront-log-file">CloudFront Access Log (.gz)</label>
                         </div>
                     </fieldset>
+                    <div class="row justify-content-center text-center">
+                        <div id="arrow-left" class="col-2"><i class="fas fa-chevron-circle-down"></i></div>
+                        <div class="col-1">OR</div>
+                        <div id="arrow-right" class="col-2"><i class="fas fa-chevron-circle-down"></i></div>
+                    </div>
                     <div class="row">
                         <fieldset id="fieldset-log-file-date" class="col form-group border mx-2">
                             <legend>Filter By Date</legend>
@@ -183,31 +195,37 @@
                             </div>                            
                         </fieldset>
                     </div>
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <small>No. of log files selected: <span id="info-num-files-selected"><!--JS--></span></small>
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-5">
+                            <table id="table-object-count" class="table table-sm table-bordered">
+                                <tr>
+                                    <td class="text-right">Number of log files selected:</td>
+                                    <td id="info-num-files-selected" class="align-middle"><!-- JS --></td>
+                                </tr>
+                            </table>                            
                         </div>
-                        <div class="col-4 text-center">
-                            <button type="" id="button-submit-filter-form" class="btn btn-success btn-lg" onclick="return submitFilterForm();" disabled>Go!</button>
+                        <div class="col-4 text-right">                        
+                            <button type="" id="button-submit-filter-form" class="btn btn-success btn-lg" onclick="return submitFilterForm();" disabled>Load & Display</button>                            
                         </div>
                     </div>                
                 </form>                
             </section>            
         </div>
         <!-- Load Logs Message Area -->
-        <div id="message-area-load-logs" class="row align-items-center">
-            <div class="col-9 m-2">
-                <div id="status-area-load-logs"><!--JS--></div>
-                <div id="message-area-loaded-counter"><!--JS--></div>
+        <div id="message-area-load-logs" class="row align-items-center">                                        
+            <div id="status-area-load-logs" class="col-3 m-2">
+                <span class="spinner-border" role="status"></span><!--JS-->
             </div>
-            <div class="col m-2">
+            <div id="message-area-loaded-counter" class="col-6"><!--JS--></div>
+            <div class="col m-2 text-right">
                 <button type="button" class="btn btn-warning" onclick="changeFilters();">Change Filter</button>
             </div>            
         </div>        
         <!-- Visualised Data Section-->
-        <section id="section-visualise-data" class="row">
-            <div class="badge badge-info m-2">Chart Area</div>
-            <h2 id="heading-no-data" class="text-center"><i>Nothing to show, use controls above to load some data ^</i></h2>
+        <section id="section-visualise-data" class="row">            
+            <div id="heading-no-data" class="col text-center mt-3">                
+                <p><span class="badge badge-info m-2">Chart Area</span>Nothing to show, use controls above to load some data <i class="fas fa-arrow-up"></i></p>
+            </div>
             <article id="chart-requests-over-time" class="col-12 chart">                
                 <h2>Requests Over Time</h2>
                 <!-- DC Chart Here -->
