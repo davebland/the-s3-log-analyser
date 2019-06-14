@@ -291,11 +291,13 @@ function checkSavedCredsButtonState() {
 /* DEMO CREDENTIALS */
 
 function loadDemoCredentials() {
-    // Get demo creds from file (tbd)
-
-    // Input data into form fields
+    // Get demo secret from web
+    $.get('https://daveb.me.uk/s3-log-analyser-demo.txt', function(secret) {
+        // Input into form
+        $('#access-key-secret').val(secret);
+    });
+    // Input other creds data into form fields
     $('#access-key-id').val('AKIASVQN7V6SIMIAYWHC');
-    $('#access-key-secret').val('');
     $('#aws-region-select').val('eu-west-2');
     $('#bucket-name').val('demo.the-s3-log-analyser');
 }
