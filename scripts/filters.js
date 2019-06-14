@@ -106,11 +106,11 @@ function getObjectListStats(removedCount = 0) {
 
 function displayListStats(objectListStats) {
     // Update gz count
-    $('#message-area-api-connect-gz-count').html(`CloudFront Log Files: <i>${objectListStats.gzCount}</i>`);
+    $('#message-area-api-connect-gz-count').html(objectListStats.gzCount);
     // Update other count
-    $('#message-area-api-connect-other-count').html(`S3 Log Files: <i>${objectListStats.s3Count}</i>`);
+    $('#message-area-api-connect-other-count').html(objectListStats.s3Count);
     // Update removed count
-    $('#message-area-api-connect-removed-count').html(`Files Ignored: <i>${objectListStats.removedCount}</i>`);
+    $('#message-area-api-connect-removed-count').html(objectListStats.removedCount);
     // Update form elements using min max dates
     let dateFormat = d3.timeFormat('%Y-%m-%d');
     $('#info-date-max').text(objectListStats.maxDate.toDateString());

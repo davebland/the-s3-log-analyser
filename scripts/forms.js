@@ -89,7 +89,7 @@ function resetFilterForm() {
 
 function updateApiMessageArea(numObjects) {
     // Update the counter for number of object found in message area
-    $('#message-area-api-connect-counter').html(`Objects found: <strong>${numObjects}</strong>`);
+    $('#message-area-api-connect-counter').html(numObjects);
 }
 
 // Clear API message area

@@ -8,6 +8,7 @@
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="./lib/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./lib/css/dc.min.css" />
+    <link rel="stylesheet" href="./lib/css/fontawesome.min.css" />
     <!-- App CSS -->
     <link rel="stylesheet" href="./styles/main.css" />
     <!-- JS Libraries -->
@@ -25,16 +26,26 @@
     <script defer src="./scripts/charts.js"></script>
 </head>
 <body>
-    <!-- Site Header -->
-    <header>
-        <h1 class="text-center">The S3 Log Analyser</h1>
-    </header>
     <div id="app-container" class="container-fluid">
-        <div class="row card">
+        <!-- Site Header -->
+        <header class="row fixed-top align-items-center text-center flex-nowrap">
+            <div class="col">Logo1</div>
+            <h1 class="col-8">The S3 Log Analyser</h1>
+            <div class="col">Logo2</div>
+        </header>
+        <!-- Intro Text -->
+        <div class="row card m-3">
             <div class="card-body">
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque ad, dignissimos in, fugiat nisi corporis iusto, saepe quasi impedit tempora ab? At voluptates quod aperiam quos officia ullam harum doloremque! Vero possimus accusamus saepe qui iste commodi et aspernatur aliquam aliquid fugit, quos vel voluptates non dolore. Voluptatum, esse amet.</p>
             </div>
         </div>
+        <!-- Helper Graphics -->
+        <div class="row">
+            <div class="col-12 col-lg-5 text-center">
+                <i class="fas fa-arrow-circle-down"></i> Start Here
+            </div>
+        </div>
+        <!-- App Setup -->
         <div class="row justify-content-around">
             <!-- API Credentials Section -->
             <section id="section-api-creds" class="col-11 col-lg-5 m-2 py-2 rounded highlight-form">                
@@ -89,13 +100,33 @@
                 </form>                                                                                                             
             </section>
             <!-- API Connect Message Area -->
-            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">            
-                <!-- Filled by JS -->
-                <div id="message-area-api-connect-loading"></div>
-                <div id="message-area-api-connect-counter"></div>
-                <div id="message-area-api-connect-gz-count"></div>
-                <div id="message-area-api-connect-other-count"></div>
-                <div id="message-area-api-connect-removed-count"></div>
+            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">                            
+                <div id="message-area-api-connect-loading"><!-- JS --></div>
+                <table class="table table-sm">
+                    <tr>
+                        <td>Objects Found</td>
+                        <td id="message-area-api-connect-counter"><!-- JS --></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Files</strong></td>
+                    </tr>
+                    <tr>
+                        <td>S3</td>
+                        <td id="message-area-api-connect-other-count"><!-- JS --></td>
+                    </tr>
+                    <tr>
+                        <td>CloudFront</td>
+                        <td id="message-area-api-connect-gz-count"><!-- JS --></td>
+                    </tr>
+                    <tr>
+                        <td>Ignored</td>
+                        <td id="message-area-api-connect-removed-count"><!-- JS --></td>
+                    </tr>
+                </table>
+                <div class="">
+                    <i class="fas fa-arrow-circle-right"></i><br>
+                    Now Select Some Log Dates to View
+                </div>
             </div>           
             <!-- Filter Log Files Section -->
             <section id="section-filter-logs" class="col-11 col-lg-5 m-2 py-2 rounded">                                                        

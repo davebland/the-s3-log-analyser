@@ -60,6 +60,7 @@ Log file date derived from file name rather than date modified property.
     - dc.js (3.0.12)
         - crossfilter.js (1.4.7)
         - d3.js (5.9.2)
+    - FontAwesome (5.9.0)
 
 ## Testing
 
