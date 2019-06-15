@@ -48,7 +48,10 @@ function chartRequestsOverTime(ndx) {
     dc.lineChart("#chart-requests-over-time")
         .dimension(dateDim)
         .group(countGroup)
-        .x(d3.scaleTime().domain([minDate,maxDate]));
+        .x(d3.scaleTime().domain([minDate,maxDate]))
+        .xAxisLabel("Time")
+        .elasticY(true)
+        .yAxisLabel("No. of Requests");
 }
 
 // Requests by type pie chart
@@ -125,7 +128,9 @@ function chartBytesSentOverTime(ndx) {
         .dimension(dateDim)
         .group(countGroup)
         .x(d3.scaleTime().domain([minDate,maxDate]))
-        .xUnits(d3.timeDays);
+        .xUnits(d3.timeDays)
+        .xAxisLabel("Time")
+        .yAxisLabel("Bytes");
 }
 
 // Request by encryption bar chart
@@ -139,14 +144,34 @@ function chartRequestsByProtocol(ndx) {
             return 'HTTPS';
         }
     });
-    let countGroup = protocolDim.group();
+    let countGroup = protocolDim.group().reduce(percentageAdd, percentageRemove, percentageInitial);
+
+    // Reduce to percentage functions
+    function percentageAdd(p, v) {
+        p.count++;
+        p.percentage = p.count / protocolDim.groupAll().value();
+        return p;
+    }
+    function percentageRemove(p, v) {
+        p.count--;
+        p.percentage = p.count / protocolDim.groupAll().value();
+        return p;
+    }
+    function percentageInitial(p, v) {        
+        return {count: 0, percentage: 0};
+    }
 
     // Create graph
     dc.barChart("#chart-requests-by-protocol")
         .dimension(protocolDim)
         .group(countGroup)
         .x(d3.scaleOrdinal())
-        .xUnits(dc.units.ordinal);
+        .xUnits(dc.units.ordinal)
+        .xAxisLabel("Protocol")
+        .valueAccessor(function(d) {
+            return d.value.percentage*100;
+        })
+        .yAxisLabel("% Requests");
 }
 
 // File requested by count leaderboard
