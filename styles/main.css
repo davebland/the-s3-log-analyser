@@ -60,7 +60,7 @@ h1 {
     font-weight: 600;
 }
 
-/** Container Size and Position **/
+/** Container Size, Position and Visability **/
 
 header {
     height: 6vh;
@@ -69,11 +69,18 @@ header {
 #app-container {
     margin-top: 7vh;
     margin-bottom: 10vh;
-    
 }
 
-#message-area-load-logs div {
+#message-area-api-connect {
     display: none;
+}
+
+#instruction-select-filter {
+    display: none;
+}
+
+#message-area-load-logs {
+    //display: none;
 }
 
 #section-visualise-data article {

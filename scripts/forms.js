@@ -7,7 +7,7 @@
 // Application wide variables
 var saveCredsFlag = false;
 
-// Disable standard form submit behavour (reload page)
+// Disable standard form submit behavour (don't reload page)
 $(document).submit(function(event){
     event.preventDefault();
 });
@@ -94,7 +94,12 @@ function updateApiMessageArea(numObjects) {
 
 // Clear API message area
 function clearApiMessageArea() {
-    $('#message-area-api-connect div').empty();
+    // Hide message area
+    $('#message-area-api-connect').hide();
+    // Reset data fields
+    $('#message-area-api-connect-loading').html('<div class="spinner-border" role="status"></div>');
+    $('message-area-api-connect-counter').html('0');
+    $('#message-area-api-connect-other-count, #message-area-api-connect-gz-count, #message-area-api-connect-removed-count').html('-');
 }
 
 // Clear & hide Load Logs message area
@@ -180,8 +185,9 @@ function submitCredsForm(formCreds) {
     enableCredsForm(false);
     $('#section-filter-logs').removeClass('highlight-form');
 
-    // Write loading to message area
-    $('#message-area-api-connect-loading').text('Loading...');
+    // Show message area & add message
+    $('#message-area-api-connect').show();
+    $('#message-area-api-connect-loading').append('Loading...');
 
     // Create object holding AWS Creds
     let awsCreds = {
@@ -194,13 +200,15 @@ function submitCredsForm(formCreds) {
 
     // Invoke function to list objects and handle promise
     awsListObjects(awsCreds).then(function(success) {
-            // Update message area
-            $('#message-area-api-connect-loading').text('Success!');            
+            // Update message area & show instruction
+            $('#message-area-api-connect-loading').html('Success!');
+            $('#instruction-select-filter').show();
             // Enable filter form
             enableFilterByTypeForm(true);
         }).catch(function(error) {
-            // Update message area
-            $('#message-area-api-connect-loading').text('Loaded, but with some errors...');            
+            // Update message area & show instruction
+            $('#message-area-api-connect-loading').html('Loaded, but with some errors...');
+            $('#instruction-select-filter').show();
             // Enable filter form
             enableFilterByTypeForm(true);
             // Call error display function

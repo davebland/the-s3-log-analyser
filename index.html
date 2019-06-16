@@ -101,14 +101,14 @@
             </section>
             <!-- API Connect Message Area -->
             <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">                            
-                <div id="message-area-api-connect-loading">
+                <div id="message-area-api-connect-loading" class="py-3">
                     <div class="spinner-border" role="status"></div>     
                     <!-- JS -->
                 </div>
                 <table id="table-object-count" class="table table-sm table-bordered">
                     <tr>
                         <td>Objects</td>
-                        <td id="message-area-api-connect-counter"><!-- JS --></td>
+                        <td id="message-area-api-connect-counter">0<!-- JS --></td>
                     </tr>
                 </table>
                 <table id="table-object-stats" class="table table-sm table-bordered">
@@ -119,18 +119,18 @@
                     </thead>
                     <tr>
                         <td>S3</td>
-                        <td id="message-area-api-connect-other-count"><!-- JS --></td>
+                        <td id="message-area-api-connect-other-count">-<!-- JS --></td>
                     </tr>
                     <tr>
                         <td>CloudFront</td>
-                        <td id="message-area-api-connect-gz-count"><!-- JS --></td>
+                        <td id="message-area-api-connect-gz-count">-<!-- JS --></td>
                     </tr>
                     <tr>
                         <td><i>Ignored</i></td>
-                        <td id="message-area-api-connect-removed-count"><!-- JS --></td>
+                        <td id="message-area-api-connect-removed-count">-<!-- JS --></td>
                     </tr>                   
                 </table>
-                <div class="">
+                <div id="instruction-select-filter" class="">
                     <i class="fas fa-arrow-circle-right"></i><br>
                     Now Select By Date
                 </div>
@@ -212,12 +212,15 @@
             </section>            
         </div>
         <!-- Load Logs Message Area -->
-        <div id="message-area-load-logs" class="row align-items-center">                                        
-            <div id="status-area-load-logs" class="col-3 m-2">
-                <span class="spinner-border" role="status"></span><!--JS-->
+        <div id="message-area-load-logs" class="row align-items-center my-3">                                        
+            <div id="message-area-load-logs-loading" class="col">
+                <span class="spinner-border" role="status"></span>
+                <!--JS-->text
             </div>
-            <div id="message-area-loaded-counter" class="col-6"><!--JS--></div>
-            <div class="col m-2 text-right">
+            <div class="col">
+                <p class="text-center">Logs Loaded: <span id="message-area-load-logs-counter">0<!-- JS --></span></p>
+            </div>
+            <div class="col text-right">
                 <button type="button" class="btn btn-warning" onclick="changeFilters();">Change Filter</button>
             </div>            
         </div>        
@@ -251,11 +254,11 @@
                 <!-- DC Chart Here -->
             </article>
             <article id="" class="col-md-4 chart">                
-                <h2>Top 10 Requested Files</h2>
+                <h2>Top 10 URLs</h2>
                 <table id="leaderboard-files-by-count" class="table table-striped"><!-- DC Table Here --></table>
             </article>
             <article id="" class="col-md-4 chart">                
-                <h2>Slowest 10 Loading Files</h2>
+                <h2>Slowest 10 Request by Processing Time</h2>
                 <table id="leaderboard-files-by-time" class="table table-striped"><!-- DC Table Here --></table>
             </article>
         </section>
