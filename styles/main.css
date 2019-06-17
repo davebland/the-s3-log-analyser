@@ -9,9 +9,6 @@ header {
     background-color: lightslategray;
 }
 
-#app-container {
-}
-
 #section-api-creds {
     background-color: whitesmoke;
     border: 1px solid darkgray;
@@ -33,11 +30,8 @@ header {
 #message-area-load-logs {
 }
 
-#section-visualise-data {    
-}
-
-.chart-area-background {
-    background-color: darkgray;
+#section-visualise-data {
+    background-color: darkgray;    
 }
 
 .chart {
@@ -60,6 +54,10 @@ h1 {
     font-weight: 600;
 }
 
+article h2 {
+    text-align: center;
+}
+
 /** Container Size, Position and Visability **/
 
 header {
@@ -80,7 +78,6 @@ header {
 }
 
 #message-area-load-logs {
-    //display: none;
 }
 
 #section-visualise-data article {
@@ -95,6 +92,10 @@ footer {
     position: fixed;
     bottom: 0;    
     width: 100vw;
+}
+
+#button-change-filter-footer {
+    display: none;
 }
 
 /** Form Styles **/

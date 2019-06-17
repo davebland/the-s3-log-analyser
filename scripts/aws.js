@@ -103,7 +103,6 @@ function awsListObjects(awsCreds) {
 function awsGetObjects(awsGetList) {
     // Reset & display loaded logs counter
     let loadedLogsCounter = 0;
-    $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
     // Reset dataArray
     dataArray = [];    
     // Create an array of promises (one for each file to be retrieved)
@@ -125,11 +124,12 @@ function awsGetObjects(awsGetList) {
                 parseLogFileContent(apiSuccess.Body.toString(), listItem.type).then(function(parseSuccess) {
                     // Update loaded logs counter
                     loadedLogsCounter++;
-                    $('#message-area-loaded-counter').text(`Logs Loaded: ${loadedLogsCounter}`);
+                    $('#message-area-load-logs-counter').text(loadedLogsCounter);
                     resolve();
                 }).catch(function(parseError) {
                     // Update loaded logs counter
                     loadedLogsCounter++;
+                    $('#message-area-load-logs-counter').text(loadedLogsCounter);
                     // Catch parsing error and save as warning
                     let errorText = `Error processing file ${listItem.objectKey} - ${parseError.message}`;
                     let errorObject = {type: 'Log File Processing', errorMessage: errorText, severity: 'fatal'};

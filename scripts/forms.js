@@ -15,6 +15,8 @@ $(document).submit(function(event){
 // Initial functions to run
 checkSavedCredsButtonState();
 getAwsRegions();
+$('#message-area-load-logs').hide();
+
 
 /* FORM DISPLAY */
 
@@ -102,11 +104,10 @@ function clearApiMessageArea() {
     $('#message-area-api-connect-other-count, #message-area-api-connect-gz-count, #message-area-api-connect-removed-count').html('-');
 }
 
-// Clear & hide Load Logs message area
+// Reset & hide Load Logs message area
 function clearLoadLogsMessageArea() {
-    $('#message-area-load-logs div').empty();
-    $('#message-area-load-logs div').hide();
-
+    $('#message-area-load-logs-loading').html('<span class="spinner-border mr-2" role="status"></span>');
+    $('#message-area-load-logs').hide();
 }
 
 /* RESETS */
@@ -229,10 +230,10 @@ function submitFilterForm() {
     enableFilterByPresetForm(false);
     $('#button-submit-filter-form').prop('disabled', true);
     $('#section-filter-logs').removeClass('highlight-form');
-    // Show & write loading to message area
-    $('#message-area-load-logs div').show();
-    $('#status-area-load-logs').text('Loading...');
-
+    // Show message area & filter button in footer
+    $('#message-area-load-logs').show();
+    $('#message-area-load-logs-loading').append('Loading...');
+    $('#button-change-filter-footer').show();
     // Convert list crossfilter to array of keys to retrieve
     let awsGetList = dateDim.top(Infinity);
 
@@ -242,14 +243,14 @@ function submitFilterForm() {
     // Send get list to aws function & handle promise
     awsGetObjects(awsGetList).then(function(success) {
         // Write success to message area
-        $('#status-area-load-logs').text('Logs loaded successfully!');
+        $('#message-area-load-logs-loading').text('Success!');
         // Display the charts
         displayData();
     }).catch(function(errorObject) {
         // Collect any internal errors and add to stack
         errorStack.push(errorObject);
         // Write warning to message area
-        $('#status-area-load-logs').text('Logs loaded with some errors...');
+        $('#status-area-load-logs').text('Loaded, but with some errors...');
         // Call error display function
         displayErrors();
         // Display the charts

@@ -100,18 +100,18 @@
                 </form>                                                                                                             
             </section>
             <!-- API Connect Message Area -->
-            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center">                            
+            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center px-0">                                           
                 <div id="message-area-api-connect-loading" class="py-3">
                     <div class="spinner-border" role="status"></div>     
                     <!-- JS -->
                 </div>
-                <table id="table-object-count" class="table table-sm table-bordered">
+                <table id="table-object-count" class="table table-sm table-bordered py-2">
                     <tr>
                         <td>Objects</td>
                         <td id="message-area-api-connect-counter">0<!-- JS --></td>
                     </tr>
                 </table>
-                <table id="table-object-stats" class="table table-sm table-bordered">
+                <table id="table-object-stats" class="table table-sm table-bordered py-2">
                     <thead class="thead-dark">
                         <tr>
                             <th colspan="2"><strong>Log Types</strong></th>
@@ -129,11 +129,11 @@
                         <td><i>Ignored</i></td>
                         <td id="message-area-api-connect-removed-count">-<!-- JS --></td>
                     </tr>                   
-                </table>
-                <div id="instruction-select-filter" class="">
+                </table>               
+                <div id="instruction-select-filter" class="py-3">
                     <i class="fas fa-arrow-circle-right"></i><br>
                     Now Select By Date
-                </div>
+                </div>                                
             </div>           
             <!-- Filter Log Files Section -->
             <section id="section-filter-logs" class="col-11 col-lg-5 m-2 py-2 rounded">                                                        
@@ -213,12 +213,11 @@
         </div>
         <!-- Load Logs Message Area -->
         <div id="message-area-load-logs" class="row align-items-center my-3">                                        
-            <div id="message-area-load-logs-loading" class="col">
-                <span class="spinner-border" role="status"></span>
-                <!--JS-->text
+            <div id="message-area-load-logs-loading" class="col align-middle">
+                <span class="spinner-border mr-2" role="status"></span><!--JS-->
             </div>
-            <div class="col">
-                <p class="text-center">Logs Loaded: <span id="message-area-load-logs-counter">0<!-- JS --></span></p>
+            <div class="col text-center">
+                Logs Loaded: <span id="message-area-load-logs-counter">0<!-- JS --></span>
             </div>
             <div class="col text-right">
                 <button type="button" class="btn btn-warning" onclick="changeFilters();">Change Filter</button>
@@ -229,6 +228,12 @@
             <div id="heading-no-data" class="col text-center mt-3">                
                 <p><span class="badge badge-info m-2">Chart Area</span>Nothing to show, use controls above to load some data <i class="fas fa-arrow-up"></i></p>
             </div>
+            <!-- Chart Intro Text -->
+            <article class="row card m-3">
+                <div class="card-body">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque ad, dignissimos in, fugiat nisi corporis iusto, saepe quasi impedit tempora ab? At voluptates quod aperiam quos officia ullam harum doloremque! Vero possimus accusamus saepe qui iste commodi et aspernatur aliquam aliquid fugit, quos vel voluptates non dolore. Voluptatum, esse amet.</p>
+                </div>
+            </article>
             <article id="chart-requests-over-time" class="col-12 chart">                
                 <h2>Requests Over Time</h2>
                 <!-- DC Chart Here -->
@@ -242,7 +247,7 @@
                 <!-- DC Chart Here -->
             </article>
             <article id="chart-response-by-http-status" class="col-md-4 chart">                
-                <h2>HTTP Status Code Returned</h2>
+                <h2>HTTP Status Code</h2>
                 <!-- DC Chart Here -->
             </article>
             <article id="chart-bytes-sent-over-time" class="col-12 chart">                
@@ -255,11 +260,11 @@
             </article>
             <article id="" class="col-md-4 chart">                
                 <h2>Top 10 URLs</h2>
-                <table id="leaderboard-files-by-count" class="table table-striped"><!-- DC Table Here --></table>
+                <table id="leaderboard-files-by-count" class="table table-striped table-bordered text-center"><!-- DC Table Here --></table>
             </article>
             <article id="" class="col-md-4 chart">                
-                <h2>Slowest 10 Request by Processing Time</h2>
-                <table id="leaderboard-files-by-time" class="table table-striped"><!-- DC Table Here --></table>
+                <h2>Slowest 10 Requests by Processing Time</h2>
+                <table id="leaderboard-files-by-time" class="table table-striped table-bordered text-center"><!-- DC Table Here --></table>
             </article>
         </section>
         <!-- Site Footer -->
@@ -270,7 +275,7 @@
                         <button type="reset" class="btn btn-danger" onclick="resetPage();">RESET</button>
                     </div>
                     <div class="col col-4">
-                        <button type="button" class="btn btn-warning" onclick="changeFilters();">Change Filter</button>
+                        <button id="button-change-filter-footer" type="button" class="btn btn-warning" onclick="changeFilters();">Change Filter</button>
                     </div>
                 </div>
             </div>            

@@ -173,8 +173,9 @@ function updateSelectedLogFiles() {
 }
 
 function changeFilters() {
-    // Clear chart display area
-
+    // Reset chart display area & message area
+    resetChartArea()
+    clearLoadLogsMessageArea();
     // Re-enable filter form elements & highlight section
     enableFilterByTypeForm(true);
     enableFilterByDateForm(true);

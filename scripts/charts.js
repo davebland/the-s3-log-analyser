@@ -34,6 +34,14 @@ $(window).resize(function() {
     dc.renderAll();
 });
 
+/** RESETS **/
+
+function resetChartArea() {
+    $('#section-visualise-data article').hide();
+    $('#heading-no-data').show();
+    $('#button-change-filter-footer').hide();
+}
+
 // Requests over time line graph
 function chartRequestsOverTime(ndx) {
     // Create date dimension & group by count
@@ -85,6 +93,12 @@ function chartRequestsByUserAgent(ndx) {
     let userAgentDim = ndx.dimension(dc.pluck('UserAgent'));
     let countGroup = userAgentDim.group();
 
+    // Create legend
+    let chartLegend = dc.legend().x(0).y(300).autoItemWidth(true).gap(5)
+        .legendText(function(d) {
+            return d.name.substr(0,50) + '...';
+        });
+
     // Create a pie chart
     dc.pieChart("#chart-requests-by-user-agent")
         .width(() => {return $('#chart-requests-by-type').width();})
@@ -95,7 +109,7 @@ function chartRequestsByUserAgent(ndx) {
         .group(countGroup)
         .slicesCap(5)
         .label((d) => { return d.key.substr(0,10) + '...';})
-        .legend(dc.legend().x(0).y(300).autoItemWidth(true).gap(5));
+        .legend(chartLegend);
 }
 
 // Response by http status pie chart
