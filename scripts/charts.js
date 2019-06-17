@@ -44,12 +44,12 @@ function resetChartArea() {
 
 // Requests over time line graph
 function chartRequestsOverTime(ndx) {
-    // Create date dimension & group by count
-    let dateDim = ndx.dimension(dc.pluck('TimeDate'));
+    // Create date dimension by day & group by count
+    let dateDim = ndx.dimension(function(d) { return d3.timeDay(d.TimeDate)});
     let countGroup = dateDim.group();
 
     // Get max & min dates
-    let minDate = dateDim.bottom(1)[0].TimeDate;
+    let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
     let maxDate = dateDim.top(1)[0].TimeDate;
 
     // Create graph
@@ -57,9 +57,17 @@ function chartRequestsOverTime(ndx) {
         .dimension(dateDim)
         .group(countGroup)
         .x(d3.scaleTime().domain([minDate,maxDate]))
+        .xUnits(d3.timeDays)
         .xAxisLabel("Time")
         .elasticY(true)
-        .yAxisLabel("No. of Requests");
+        .yAxisLabel("No. of Requests")
+        .xyTipsOn(true)
+        .defined(function(d) {
+            if(d.y !== null) {
+                return d.y;
+            }
+            return 0;         
+        });
 }
 
 // Requests by type pie chart
@@ -137,6 +145,10 @@ function chartBytesSentOverTime(ndx) {
     let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
     let maxDate = dateDim.top(1)[0].TimeDate;
 
+    // Get min and max bytes for range
+    let minBytes = 0;
+    let maxBytes = 10000;
+
     // Create graph
     dc.barChart("#chart-bytes-sent-over-time")
         .dimension(dateDim)
@@ -144,7 +156,8 @@ function chartBytesSentOverTime(ndx) {
         .x(d3.scaleTime().domain([minDate,maxDate]))
         .xUnits(d3.timeDays)
         .xAxisLabel("Time")
-        .yAxisLabel("Bytes");
+        .yAxisLabel("Bytes")
+        .margins().left = 50;
 }
 
 // Request by encryption bar chart

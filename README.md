@@ -48,6 +48,7 @@ Log file date derived from file name rather than date modified property.
 - Display dates in other time zones
 - Firefox doesn't support regex look behind assertion and prevents script load
 - Change the date filter according to log type selected
+- Visualise bar & line chart data in smaller increments than 1 day
 
 ## Technologies
 
