@@ -128,7 +128,12 @@ footer {
 
 }
 
-/** Bootstrap Overrides **/
+/** Chart Display **/
+
+.leaderboard {
+}
+
+/** Overrides **/
 
 .fas {
     font-size: 2em;

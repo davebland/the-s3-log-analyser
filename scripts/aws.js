@@ -11,7 +11,7 @@ var s3;
 var dataArray = [];
 
 // TEST DATA
-var testDataS3 = `acea1d36a41f52c5432d6d490e825a08cdca9707571786b815c557e6940ec384 daveb.me.uk [14/Mar/2019:16:26:37 +0000] 157.55.39.63 - 82BA8AA0D5BA6649 WEBSITE.GET.OBJECT index.html "GET / HTTP/1.1" 200 - 195 195 69 69 "-" "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)" - - A4+LRBmK5nKJOwpWhBqCIqrvPhVCXw75oVvyl/xXxfTuo42mk3Lff3Ah/R7V4h3gLeqVQhNsgGs= - - - daveb.me.uk` // TEMP
+var testDataS3 = `acea1d36a41f52c5432d6d490e825a08cdca9707571786b815c557e6940ec384 daveb.me.uk [14/Mar/2019:16:26:37 +0000] 157.55.39.63 - 82BA8AA0D5BA6649 WEBSITE.GET.OBJECT averyaverylongkeynameververylongindex.html "GET / HTTP/1.1" 200 - 195 195 69 69 "-" "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)" - - A4+LRBmK5nKJOwpWhBqCIqrvPhVCXw75oVvyl/xXxfTuo42mk3Lff3Ah/R7V4h3gLeqVQhNsgGs= - - - daveb.me.uk` // TEMP
 var testDataCF = `2019-06-05	12:13:22	SEA19	574	54.212.180.101	GET	d3b19qjblu2xca.cloudfront.net	/	301	-	Go-http-client/1.1	-	-	Redirect	erWxwdksn2n2ozxSVRUk6fotC6hZXI3O4xRuuGrx247HL7uU1t1l5g==	daveb.me.uk	http	92	0.001	-	-	-	Redirect	HTTP/1.1` // TEMP
 parseLogFileContent(testDataS3, 'S3Log');
 parseLogFileContent(testDataCF, 'CloudFront');

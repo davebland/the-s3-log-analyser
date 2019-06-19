@@ -104,7 +104,11 @@ function chartRequestsByUserAgent(ndx) {
     // Create legend
     let chartLegend = dc.legend().x(0).y(300).autoItemWidth(true).gap(5)
         .legendText(function(d) {
-            return d.name.substr(0,50) + '...';
+            if (d.name.length < 50) {
+                return d.name;
+            } else {
+                return d.name.substr(0,50) + '...';
+            }            
         });
 
     // Create a pie chart
@@ -221,7 +225,8 @@ function leaderboardFilesByCount(ndx) {
             }
         ])
         .order(d3.descending)
-        .size(10);
+        .size(10)
+        .showSections(false);
 }
 
 // File requested by processing time leaderboard
@@ -261,10 +266,11 @@ function leaderboardFilesByTime(ndx) {
                 format: function (d) { return d.key; }
             },
             {
-                label: "Average Processing Time",
+                label: "Time (ms)",
                 format: function (d) { return d.value.avg; }
             }
         ])
         .order(d3.descending)
-        .size(10);
+        .size(10)
+        .showSections(false);
 }

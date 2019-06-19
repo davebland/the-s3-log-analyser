@@ -67,7 +67,7 @@ Log file date derived from file name rather than date modified property.
 
 Manual testing of functions using development tools in browser.
 Testing of log file name management using test files in demo bucket.
-Automated Jasmine testing tbd.
+Test data in code.
 
 ### Technical Challenges
 
