@@ -44,6 +44,7 @@ function enableFilterByTypeForm(yes) {
     if (yes) {
         // Highlight section
         $('#section-filter-logs').addClass('highlight-form');
+        $('#fieldset-log-file-type').addClass('border-red');
         //Enable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', false);
         $('#button-submit-filter-form').prop('disabled', false);
@@ -59,13 +60,24 @@ function enableFilterByDateForm(yes) {
         //Enable form fields & buttons
         $('#fieldset-log-file-date :input').prop('disabled', false);
         $('#button-submit-filter-form').prop('disabled', false);
+        $('#button-reset-filter-form').prop('disabled', false);
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-date :input').prop('disabled', true);
     }
 }
 
-function enableFilterByPresetForm(yes) {};
+function enableFilterByPresetForm(yes) {
+    if (yes) {
+        //Enable form fields & buttons
+        $('#fieldset-log-file-presets :input').prop('disabled', false);
+        $('#button-submit-filter-form').prop('disabled', false);
+        $('#button-reset-filter-form').prop('disabled', false);
+    } else {
+        //Disable form fields
+        $('#fieldset-log-file-presets :input').prop('disabled', true);
+    }
+};
 
 function enableFilterFormSubmit(yes) {
     if (yes) {
@@ -84,7 +96,18 @@ function resetCredsForm() {
 
 // Reset Filter Logs Form
 function resetFilterForm() {
+    // Disable elements apart from type selected, highlight & reset form
+    enableFilterByTypeForm(true);
+    enableFilterByDateForm(false);
+    enableFilterByPresetForm(false);
+    $('#section-filter-logs').addClass('highlight-form');    
     $('#form-filter-log-files')[0].reset();
+    $('#info-num-files-selected').text('-');
+    $('#button-submit-filter-form').prop('disabled', true);
+    $('#button-reset-filter-form').prop('disabled', true);
+    $('#fieldset-log-file-date').removeClass('border-red');
+    $('#fieldset-log-file-presets').removeClass('border-red');
+    updateMinMaxDates();
 }
 
 /* MESSAGE AREAS */
@@ -117,6 +140,7 @@ function resetPage() {
     // Reset forms
     resetCredsForm();
     resetFilterForm();
+    $('#fieldset-log-file-type').removeClass('border-red');
     // Disable filter form and enable creds form
     enableCredsForm(true);
     enableFilterByTypeForm(false);

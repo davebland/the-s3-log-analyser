@@ -94,14 +94,29 @@ function getObjectListStats(removedCount = 0) {
     });
     // Sort Asc by date
     awsObjectList.sort((a, b) => a.dateCreated - b.dateCreated);
-    // Get max & min date object (start and end of array)
-    objectListStats.maxDate = awsObjectList[awsObjectList.length - 1]['dateCreated'];
-    objectListStats.minDate = awsObjectList[0]['dateCreated'];
-
+    // Update min and max date objects
+    updateMinMaxDates();
     // Update display
     displayListStats(objectListStats);
 
     return Promise.resolve();
+}
+
+function updateMinMaxDates() {
+    // Get max & min date object (start and end of array)
+    let maxDate = awsObjectList[awsObjectList.length - 1]['dateCreated'];
+    let minDate = awsObjectList[0]['dateCreated'];
+    // Set form elements to reflect min and max dates
+    let dateFormat = d3.timeFormat('%Y-%m-%d');
+    $('#info-date-max').text(maxDate.toDateString());
+    $('#date-max').attr('min', dateFormat(minDate));
+    $('#date-max').attr('max', dateFormat(maxDate));
+    $('#date-max').val(dateFormat(maxDate));
+    $('#info-date-min').text(minDate.toDateString());
+    $('#date-min').attr('min', dateFormat(minDate));
+    $('#date-min').attr('max', dateFormat(maxDate));
+    $('#date-min').val(dateFormat(minDate));
+    return;
 }
 
 function displayListStats(objectListStats) {
@@ -111,17 +126,6 @@ function displayListStats(objectListStats) {
     $('#message-area-api-connect-other-count').html(objectListStats.s3Count);
     // Update removed count
     $('#message-area-api-connect-removed-count').html(objectListStats.removedCount);
-    // Update form elements using min max dates
-    let dateFormat = d3.timeFormat('%Y-%m-%d');
-    $('#info-date-max').text(objectListStats.maxDate.toDateString());
-    $('#date-max').attr('min', dateFormat(objectListStats.minDate));
-    $('#date-max').attr('max', dateFormat(objectListStats.maxDate));
-    $('#date-max').val(dateFormat(objectListStats.maxDate));
-    $('#info-date-min').text(objectListStats.minDate.toDateString());
-    $('#date-min').attr('min', dateFormat(objectListStats.minDate));
-    $('#date-min').attr('max', dateFormat(objectListStats.maxDate));
-    $('#date-min').val(dateFormat(objectListStats.minDate));
-
     return;
 }
  
@@ -144,15 +148,14 @@ function filterListByType(type) {
 }
 
 function filterListByDate() {
-    // Disable filter by type and preset
+    // Disable filter by type and preset elements & highlight
     enableFilterByTypeForm(false);
     enableFilterByPresetForm(false);
+    $('#fieldset-log-file-date').addClass('border-red');
     // Get date value from both date form elements
     let dateMin = new Date($('#date-min').val());
     let dateMax = new Date($('#date-max').val());
     dateMax.setDate(dateMax.getDate() + 1); // Add 1 day to satisfy filter function
-    console.log(dateMin);
-    console.log(dateMax);
     // Clear old filters and re filter date dimension by range min or max
     dateDim.filterAll();
     dateDim.filterRange([dateMin, dateMax]);
@@ -161,10 +164,39 @@ function filterListByDate() {
     return Promise.resolve();
 }
 
-function filterListByPreset(presetNum) {
-    // Disable filter by type and date
+function filterListByPreset(presetName) {
+    // Disable filter by type and date elements & highlight
     enableFilterByTypeForm(false);
     enableFilterByDateForm(false);
+    $('#fieldset-log-file-presets').addClass('border-red');
+    // For each preset no apply a relevant filter to the list data
+    dateDim.filterAll();
+    let today = new Date();
+    let dateMax = d3.timeDay.offset(today, +1);
+    let dateMin = null;
+    switch(presetName) {
+        case "1Week" :
+            dateMin = d3.timeDay.offset(today, -7);
+            dateDim.filterRange([dateMin, dateMax]);
+            break;
+        case "1Month" :
+            dateMin = d3.timeMonth.offset(today, -1);
+            dateDim.filterRange([dateMin, dateMax]);
+            break;
+        case "6Month" :
+            dateMin = d3.timeMonth.offset(today, -6);
+            dateDim.filterRange([dateMin, dateMax]);
+            break;
+        case "1Year" :
+            dateMin = d3.timeYear.offset(today, -1);
+            dateDim.filterRange([dateMin, dateMax]);
+            break;
+        default :
+            break;
+    }
+    // Update count display & return
+    updateSelectedLogFiles();
+    return Promise.resolve();
 }
 
 function updateSelectedLogFiles() {
@@ -173,14 +205,10 @@ function updateSelectedLogFiles() {
 }
 
 function changeFilters() {
-    // Reset chart display area & message area
+    // Reset chart display area, message area & filter form
     resetChartArea()
     clearLoadLogsMessageArea();
-    // Re-enable filter form elements & highlight section
-    enableFilterByTypeForm(true);
-    enableFilterByDateForm(true);
-    enableFilterByPresetForm(true);
-    $('#section-filter-logs').addClass('highlight-form');
+    resetFilterForm();
 }
 /** Test Data **/
 

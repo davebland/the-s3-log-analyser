@@ -173,40 +173,45 @@
                                 <p class="text-right"><small >Latest: <span id="info-date-max"><!-- JS Inserts --></span></small></p> 
                             </div>                                                   
                         </fieldset>
-                        <fieldset class="col form-group border mx-2">
+                        <fieldset id="fieldset-log-file-presets" class="col form-group border mx-2">
                             <legend>Preset Filters</legend>
                             <div class="space-vertically ml-3">
                                <div class="vertically-spaced-item custom-control custom-radio py-1">
-                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter1" value="filter1" disabled>
-                                    <label class="custom-control-label" for="filter1">filter1</label>
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="1Week" value="1Week" onclick="filterListByPreset('1Week');" disabled>
+                                    <label class="custom-control-label" for="1Week">Last 1 weeks</label>
                                 </div>
                                 <div class="vertically-spaced-item custom-control custom-radio py-1">
-                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter2" value="filter2" disabled>
-                                    <label class="custom-control-label" for="filter2">filter2</label>
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="1Month" value="1Month" onclick="filterListByPreset('1Month');" disabled>
+                                    <label class="custom-control-label" for="1Month">Last 1 months</label>
                                 </div>
                                 <div class="vertically-spaced-item custom-control custom-radio py-1">
-                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter3" value="filter3" disabled>
-                                    <label class="custom-control-label" for="filter3">filter3</label>
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="6Month" value="6Months" onclick="filterListByPreset('6Month');" disabled>
+                                    <label class="custom-control-label" for="6Month">Last 6 Months</label>
                                 </div>
                                 <div class="vertically-spaced-item custom-control custom-radio py-1">
-                                    <input class="custom-control-input" type="radio" name="preset-filter" id="filter4" value="filter4" disabled>
-                                    <label class="custom-control-label" for="filter4">filter4</label>
+                                    <input class="custom-control-input" type="radio" name="preset-filter" id="1Year" value="1Year" onclick="filterListByPreset('1Year');" disabled>
+                                    <label class="custom-control-label" for="1Year">Last 12 Months</label>
                                 </div>                                
                             </div>                            
                         </fieldset>
                     </div>
                     <div class="row align-items-center justify-content-between">
-                        <div class="col-5">
-                            <table id="table-object-count" class="table table-sm table-bordered">
-                                <tr>
-                                    <td class="text-right">Number of log files selected:</td>
-                                    <td id="info-num-files-selected" class="align-middle"><!-- JS --></td>
-                                </tr>
-                            </table>                            
+                        <div class="col">
+                            <div class="badge badge-pill badge-info p-3">
+                                <table>
+                                    <tr>
+                                        <td>Log Files<br>Selected</td>
+                                        <td><span id="info-num-files-selected" class="badge badge-light ml-2 align-middle">-<!-- JS --></span></td>
+                                    </tr>                                    
+                                </table>
+                            </div>                                                            
                         </div>
-                        <div class="col-4 text-right">                        
-                            <button type="" id="button-submit-filter-form" class="btn btn-success btn-lg" onclick="return submitFilterForm();" disabled>Load & Display</button>                            
+                        <div class="col">
+                            <button type="reset" id="button-reset-filter-form" class="btn btn-danger btn-sm" onclick="changeFilters();" disabled>Reset Filter</button> 
                         </div>
+                        <div class="col text-right">                                             
+                            <button type="button" id="button-submit-filter-form" class="btn btn-success btn-lg" onclick="return submitFilterForm();" disabled>Load & Display</button>                            
+                        </div>                    
                     </div>                
                 </form>                
             </section>            

@@ -14,10 +14,6 @@ header {
     border: 1px solid darkgray;
 }
 
-#table-object-count {
-    font-size: 1em;
-}
-
 #table-object-stats {
     font-size: 0.7em;
 }
@@ -25,6 +21,10 @@ header {
 #section-filter-logs {
     background-color: whitesmoke;
     border: 1px solid darkgray;
+}
+
+.border-red {
+    border: 2px solid red !important;
 }
 
 #message-area-load-logs {
