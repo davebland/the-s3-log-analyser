@@ -127,6 +127,15 @@ footer {
 /** Chart Display **/
 
 .leaderboard {
+    table-layout: fixed;
+}
+
+.leaderboard td {
+    word-wrap: break-word;
+}
+
+.leaderboard thead th:first-child {
+    width: 75%;
 }
 
 /** Overrides **/

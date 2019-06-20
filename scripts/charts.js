@@ -4,6 +4,9 @@
     BY DAVID BLAND
 */
 
+/** Setup **/
+const preferredNumberFormat = d3.format("~s");
+
 function displayData() {
     // Create crossfilter of data
     let ndx = crossfilter(dataArray);
@@ -73,18 +76,21 @@ function chartRequestsOverTime(ndx) {
         };
     };
     // *** END OF CODE FROM DC.JS WIKI *** //
-    // Create graph
-    dc.lineChart("#chart-requests-over-time")
-        .dimension(dateDim)
-        .group(ensure_group_bins(countGroup))
-        .x(timeScale)
-        .xUnits(d3.timeDays)        
-        .xAxisLabel("Time")
-        .elasticY(true)
-        .yAxisLabel("No. of Requests")
-        .xyTipsOn(true)
-        .brushOn(false)
-        .xAxis().tickFormat(d3.timeFormat("%e %b %y"));
+    // Create graph    
+    let chart = dc.lineChart("#chart-requests-over-time")
+            .dimension(dateDim)
+            .group(ensure_group_bins(countGroup))
+            .x(timeScale)
+            .xUnits(d3.timeDays)        
+            .xAxisLabel("Time")
+            .elasticY(true)
+            .yAxisLabel("No. of Requests")        
+            .xyTipsOn(true)
+            .brushOn(false)
+            .margins({top: 10, right: 50, bottom: 40, left: 50});
+            
+    chart.xAxis().tickFormat(d3.timeFormat("%e %b %y"));
+    chart.yAxis().tickFormat(preferredNumberFormat);
 }
 
 // Requests by type pie chart
@@ -167,7 +173,7 @@ function chartBytesSentOverTime(ndx) {
     let maxDate = dateDim.top(1)[0].TimeDate;
 
     // Create graph
-    dc.barChart("#chart-bytes-sent-over-time")
+    let chart = dc.barChart("#chart-bytes-sent-over-time")
         .dimension(dateDim)
         .group(countGroup)
         .x(d3.scaleTime().domain([minDate,maxDate]))
@@ -175,8 +181,11 @@ function chartBytesSentOverTime(ndx) {
         .xAxisLabel("Time")
         .yAxisLabel("Bytes")
         .brushOn(false)                
-        .margins({top: 10, right: 50, bottom: 30, left: 50})
-        .xAxis().tickFormat(d3.timeFormat("%e %b %y"));
+        .margins({top: 10, right: 50, bottom: 40, left: 50});
+    
+    
+    chart.xAxis().tickFormat(d3.timeFormat("%e %b %y"));
+    chart.yAxis().tickFormat(preferredNumberFormat);
 }
 
 // Request by encryption bar chart
@@ -231,12 +240,12 @@ function leaderboardFilesByCount(ndx) {
         .dimension(countGroup)
         .columns([
             {
-                label: "File",
+                label: "Path",
                 format: function (d) { return d.key; }
             },
             {
                 label: "Count",
-                format: function (d) { return d.value; }
+                format: function (d) { return preferredNumberFormat(d.value); }
             }
         ])
         .order(d3.descending)
@@ -272,17 +281,20 @@ function leaderboardFilesByTime(ndx) {
         return {avg: 0, count: 0, total: 0};
     }
 
+    // Formatter for 1 decimal place
+    OneDecimalPlace = d3.format(".1~f")
+
     // Create leaderboard
     dc.dataTable("#leaderboard-files-by-time")        
         .dimension(countGroup)
         .columns([
             {
-                label: "File",
+                label: "Path",
                 format: function (d) { return d.key; }
             },
             {
                 label: "Time (ms)",
-                format: function (d) { return d.value.avg; }
+                format: function (d) { return OneDecimalPlace(d.value.avg); }
             }
         ])
         .order(d3.descending)
