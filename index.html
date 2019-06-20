@@ -41,8 +41,8 @@
         </div>
         <!-- Helper Graphics -->
         <div class="row">
-            <div class="col-12 col-lg-5 text-center">
-                <i class="fas fa-arrow-circle-down"></i> Start Here
+            <div class="col-12 col-lg-5 text-center pb-2">
+                <i class="fas fa-arrow-circle-down"></i><span class="align-super"> Start Here</span>
             </div>
         </div>
         <!-- App Setup -->
@@ -50,22 +50,22 @@
             <!-- API Credentials Section -->
             <section id="section-api-creds" class="col-11 col-lg-5 m-2 py-2 rounded highlight-form">                
                 <h2 class="text-center">Connect to an S3 Bucket</h2>
-                <div class="row align-items-center">
-                    <div class="col-md-9 text-center text-md-left">
-                        <p>Enter you AWS credentials below (or load some saved ones if you have been here before). You will need to have read access to an S3 bucket, take a look at the help for
-                            more information. Credentials are <u>never</u> transmitted to our servers, saved credentials are stored in your browser.</p>
-                    </div>
-                    <div class="col-md-3 text-center mb-3">
-                        <button type="button" class="btn btn-info btn-lg rounded-circle" data-toggle="modal" data-target="#modal-help">Help..</button>
-                    </div>
+                <div class="mb-0">
+                    <p class="text-center mb-0"><strong class="align-super">Enter you AWS credentials below </strong><i class="fas fa-chevron-circle-down"></i></p>
+                    <p class="text-center"><small>(or load some saved ones if you have been here before)</small></p>
+                    <p class="text-justify">You will need to have read access to an S3 bucket, take a look at the help for
+                    more information. Credentials are <u>never</u> transmitted to our servers & saved credentials are only stored in your browser.</p>               
                 </div>
+                <div class="m-2 text-center">
+                    <button type="button" class="btn btn-info btn-lg rounded-circle" data-toggle="modal" data-target="#modal-help">Help..</button>
+                </div>                                             
                 <!-- Load Saved Credentials Buttons -->     
                 <div id="buttons-load-saved">
-                    <div class="btn-group" id="buttons-load-local-saved" role="group">
+                    <div class="btn-group pb-2 float-lg-left" id="buttons-load-local-saved" role="group">
                         <button type="button" class="btn btn-secondary" onclick="loadSavedCreds();" disabled>Load Saved</button>
                         <button type="button" class="btn btn-danger" onclick="clearSavedCreds();" disabled><small>Clear</small></button>                         
                     </div>
-                    <button class="btn btn-warning float-right" onclick="loadDemoCredentials();">Use DEMO Creds</button>
+                    <button class="btn btn-warning float-right mb-2" onclick="loadDemoCredentials();">Use DEMO Creds</button>
                 </div>                                             
                 <!-- Enter AWS Credentials Form -->
                 <form id="form-api-creds" class="mt-3" onsubmit="return submitCredsForm(this);">
@@ -100,8 +100,8 @@
                 </form>                                                                                                             
             </section>
             <!-- API Connect Message Area -->
-            <div id="message-area-api-connect" class="col col-lg-1 my-2 text-center px-0">                                           
-                <div id="message-area-api-connect-loading" class="py-3">
+            <div id="message-area-api-connect" class="col-11 col-lg-1 my-2 text-center px-lg-0">                                           
+                <div id="message-area-api-connect-loading" class="py-3 font-weight-bold">
                     <div class="spinner-border" role="status"></div>     
                     <!-- JS -->
                 </div>
@@ -131,15 +131,16 @@
                     </tr>                   
                 </table>               
                 <div id="instruction-select-filter" class="py-3">
-                    <i class="fas fa-arrow-circle-right"></i><br>
-                    Now Select By Date
+                    <i class="fas fa-arrow-circle-down d-lg-none"></i>
+                    <i class="fas fa-arrow-circle-right d-none d-lg-inline"></i><br>
+                    Now filter by type and date
                 </div>                                
             </div>           
             <!-- Filter Log Files Section -->
             <section id="section-filter-logs" class="col-11 col-lg-5 m-2 py-2 rounded">                                                        
                 <div class="text-center">
                     <h2>Filter Log Files</h2>
-                    <small>Select the type of log files to visualise</small>
+                    <small><span class="align-super">Start by selecting a log type </span><i class="fas fa-chevron-circle-down"></i></small>
                 </div>                               
                 <!-- Filter Log Files Form -->
                 <form id="form-filter-log-files" onsubmit="return submitFilterForm();">
@@ -153,11 +154,11 @@
                             <input class="custom-control-input" type="radio" name="log-file-type" id="type-cloudfront-log-file" value="cfLog" onclick="filterListByType('CloudFront');" required disabled>
                             <label class="custom-control-label" for="type-cloudfront-log-file">CloudFront Access Log (.gz)</label>
                         </div>
-                    </fieldset>
-                    <div class="row justify-content-center text-center">
-                        <div id="arrow-left" class="col-2"><i class="fas fa-chevron-circle-down"></i></div>
-                        <div class="col-1">OR</div>
-                        <div id="arrow-right" class="col-2"><i class="fas fa-chevron-circle-down"></i></div>
+                    </fieldset>          
+                    <div class="row align-items-center my-3">                        
+                        <div class="col text-right"><small><i class="fas fa-chevron-circle-down"></i></small></div>
+                        <div class="col-6 text-center"><small>Now select a date range or use the presets</small></div>
+                        <div class="col"><small><i class="fas fa-chevron-circle-down"></i></small></div>                    
                     </div>
                     <div class="row">
                         <fieldset id="fieldset-log-file-date" class="col form-group border mx-2">
@@ -218,7 +219,7 @@
         </div>
         <!-- Load Logs Message Area -->
         <div id="message-area-load-logs" class="row align-items-center my-3">                                        
-            <div id="message-area-load-logs-loading" class="col align-middle">
+            <div id="message-area-load-logs-loading" class="col align-middle font-weight-bold">
                 <span class="spinner-border mr-2" role="status"></span><!--JS-->
             </div>
             <div class="col text-center">

@@ -58,6 +58,10 @@ article h2 {
     text-align: center;
 }
 
+.align-super {
+    vertical-align: super;
+}
+
 /** Container Size, Position and Visability **/
 
 header {
@@ -112,14 +116,6 @@ footer {
 
 .highlight-form {
     box-shadow: 0 0 3px 3px green;
-}
-
-#arrow-left {
-    transform: rotate(25deg);
-}
-
-#arrow-right {
-    transform: rotate(-25deg);
 }
 
 /** Message Areas **/
