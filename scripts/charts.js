@@ -47,27 +47,44 @@ function chartRequestsOverTime(ndx) {
     // Create date dimension by day & group by count
     let dateDim = ndx.dimension(function(d) { return d3.timeDay(d.TimeDate)});
     let countGroup = dateDim.group();
-
-    // Get max & min dates
+    // Get max & min dates & create time scale
     let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
     let maxDate = dateDim.top(1)[0].TimeDate;
-
+    let timeScale = d3.scaleTime().domain([minDate,maxDate]);
+    // Create y points of 0 where data doesn't exist for a given day
+    // *** CODE FROM DC.JS WIKI *** //
+    function ensure_group_bins(source_group) {
+        var bins = Array.prototype.slice.call(arguments, 1);
+        return {
+            all:function () {
+                var result = source_group.all().slice(0),
+                    found = {};
+                result.forEach(function(d) {
+                    found[d.key] = true;
+                });
+                let bins = timeScale.ticks(d3.timeDay);
+                bins.forEach(function(d) {
+                    if(!found[d])
+                        result.push({key: d, value: 0});
+                });
+                result.sort((a, b) => a.key - b.key); // Added to sort in date order
+                return result;
+            }
+        };
+    };
+    // *** END OF CODE FROM DC.JS WIKI *** //
     // Create graph
     dc.lineChart("#chart-requests-over-time")
         .dimension(dateDim)
-        .group(countGroup)
-        .x(d3.scaleTime().domain([minDate,maxDate]))
-        .xUnits(d3.timeDays)
+        .group(ensure_group_bins(countGroup))
+        .x(timeScale)
+        .xUnits(d3.timeDays)        
         .xAxisLabel("Time")
         .elasticY(true)
         .yAxisLabel("No. of Requests")
         .xyTipsOn(true)
-        .defined(function(d) {
-            if(d.y !== null) {
-                return d.y;
-            }
-            return 0;         
-        });
+        .brushOn(false)
+        .xAxis().tickFormat(d3.timeFormat("%e %b %y"));
 }
 
 // Requests by type pie chart
@@ -149,10 +166,6 @@ function chartBytesSentOverTime(ndx) {
     let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
     let maxDate = dateDim.top(1)[0].TimeDate;
 
-    // Get min and max bytes for range
-    let minBytes = 0;
-    let maxBytes = 10000;
-
     // Create graph
     dc.barChart("#chart-bytes-sent-over-time")
         .dimension(dateDim)
@@ -161,7 +174,9 @@ function chartBytesSentOverTime(ndx) {
         .xUnits(d3.timeDays)
         .xAxisLabel("Time")
         .yAxisLabel("Bytes")
-        .margins().left = 50;
+        .brushOn(false)                
+        .margins({top: 10, right: 50, bottom: 30, left: 50})
+        .xAxis().tickFormat(d3.timeFormat("%e %b %y"));
 }
 
 // Request by encryption bar chart
