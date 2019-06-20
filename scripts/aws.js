@@ -101,6 +101,11 @@ function awsListObjects(awsCreds) {
 
 // AWS Get Object, returns promise to handler
 function awsGetObjects(awsGetList) {
+    // Check there are some items in the get list
+    if (awsGetList.length == 0) {
+        let errorObject = {type: 'Get Log File Request', errorMessage: 'No log files selected!', severity: 'fatal'};
+        return Promise.reject(errorObject);
+    }
     // Reset & display loaded logs counter
     let loadedLogsCounter = 0;
     // Reset dataArray

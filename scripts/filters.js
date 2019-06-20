@@ -130,8 +130,6 @@ function displayListStats(objectListStats) {
 }
  
 function filterListByType(type) {
-    // Reset filter by date fields
-    
     // Load awsObjectList list into crossfilter
     ndx = crossfilter(awsObjectList);
     // Create dimension by type & filter by requested type
@@ -200,15 +198,14 @@ function filterListByPreset(presetName) {
 }
 
 function updateSelectedLogFiles() {
-    console.dir(ndx.allFiltered());
     $('#info-num-files-selected').text(ndx.groupAll().reduceCount().value());
 }
 
 function changeFilters() {
     // Reset chart display area, message area & filter form
-    resetChartArea()
+    resetChartArea();
     clearLoadLogsMessageArea();
-    resetFilterForm();
+    resetFilterForm('ChangeFilter');
 }
 /** Test Data **/
 

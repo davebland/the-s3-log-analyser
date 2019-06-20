@@ -89,27 +89,6 @@ function enableFilterFormSubmit(yes) {
     }
 }
 
-// Reset API Credentials Form
-function resetCredsForm() {
-    $('#form-api-creds')[0].reset(); 
-}
-
-// Reset Filter Logs Form
-function resetFilterForm() {
-    // Disable elements apart from type selected, highlight & reset form
-    enableFilterByTypeForm(true);
-    enableFilterByDateForm(false);
-    enableFilterByPresetForm(false);
-    $('#section-filter-logs').addClass('highlight-form');    
-    $('#form-filter-log-files')[0].reset();
-    $('#info-num-files-selected').text('-');
-    $('#button-submit-filter-form').prop('disabled', true);
-    $('#button-reset-filter-form').prop('disabled', true);
-    $('#fieldset-log-file-date').removeClass('border-red');
-    $('#fieldset-log-file-presets').removeClass('border-red');
-    updateMinMaxDates();
-}
-
 /* MESSAGE AREAS */
 
 function updateApiMessageArea(numObjects) {
@@ -144,8 +123,6 @@ function resetPage() {
     // Disable filter form and enable creds form
     enableCredsForm(true);
     enableFilterByTypeForm(false);
-    enableFilterByDateForm(false);
-    enableFilterByPresetForm(false);
     // Clear filter form date displays
     $('#info-date-min').empty();
     $('#info-date-max').empty();
@@ -164,6 +141,30 @@ function resetPage() {
     errorStack = [];
     awsObjectList = [];
     ndx = 0;
+}
+
+// Reset Creds Form
+function resetCredsForm() {
+    $('#form-api-creds')[0].reset(); 
+}
+
+// Reset Filter Logs Form
+function resetFilterForm(flowPosition) {
+    // Disable elements apart from type selected, highlight & reset form
+    enableFilterByTypeForm(true);
+    enableFilterByDateForm(false);
+    enableFilterByPresetForm(false);
+    $('#section-filter-logs').addClass('highlight-form');    
+    $('#form-filter-log-files')[0].reset();
+    $('#info-num-files-selected').text('-');
+    $('#button-submit-filter-form').prop('disabled', true);
+    $('#button-reset-filter-form').prop('disabled', true);
+    $('#fieldset-log-file-date').removeClass('border-red');
+    $('#fieldset-log-file-presets').removeClass('border-red');
+    // If we are changing the filter update the dates
+    if (flowPosition == 'ChangeFilter') {
+        updateMinMaxDates();
+    }    
 }
 
 /* AWS REGION DROPDOWN */
@@ -205,6 +206,8 @@ function getAwsRegions() {
 
 // Triggered on submission of credentials form
 function submitCredsForm(formCreds) {
+    // Clear error stack
+    errorStack = [];
     
     // Disable creds form and un-highlight whilst processing
     enableCredsForm(false);
@@ -237,7 +240,7 @@ function submitCredsForm(formCreds) {
             // Enable filter form
             enableFilterByTypeForm(true);
             // Call error display function
-            displayErrors();                    
+            displayErrors('list');                    
         });
 
     // Save creds
@@ -248,6 +251,8 @@ function submitCredsForm(formCreds) {
 
 // Triggered on submission of filter form
 function submitFilterForm() {
+    // Clear error stack
+    errorStack = [];
     // Disable filter form & submit button and un-highlight whilst processing
     enableFilterByTypeForm(false);
     enableFilterByDateForm(false);
@@ -260,10 +265,6 @@ function submitFilterForm() {
     $('#button-change-filter-footer').show();
     // Convert list crossfilter to array of keys to retrieve
     let awsGetList = dateDim.top(Infinity);
-
-    // Clear error stack
-    errorStack = [];
-
     // Send get list to aws function & handle promise
     awsGetObjects(awsGetList).then(function(success) {
         // Write success to message area
@@ -274,11 +275,9 @@ function submitFilterForm() {
         // Collect any internal errors and add to stack
         errorStack.push(errorObject);
         // Write warning to message area
-        $('#status-area-load-logs').text('Loaded, but with some errors...');
+        $('#status-area-load-logs').text('Some errors occured...');
         // Call error display function
-        displayErrors();
-        // Display the charts
-        displayData();
+        displayErrors('get');
     });
 
     return false; 

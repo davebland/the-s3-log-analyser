@@ -4,9 +4,17 @@
     BY DAVID BLAND
 */
 
-function displayErrors() {
-    //Empty error modal
+function displayErrors(flowPosition) {
+    // Empty error modal & reset button
     $('#modal-error-message-area').empty();
+    $('#button-error-modal-continue:input').prop('disabled', false);
+    // Update the action of the go-back button
+    if (flowPosition == 'list') {
+        $('#button-error-modal-go-back').attr('onclick', "errorModalGoBack('list');");
+    } else {
+        $('#button-error-modal-go-back').attr('onclick', "errorModalGoBack('get');");
+    }
+    $('#button-error-modal-continue:input').prop('disabled', false);
     // Write errorStack details to modal message area
     errorStack.forEach(function(error) {
         if (error.severity == 'fatal') {
@@ -22,14 +30,11 @@ function displayErrors() {
     $('#modal-error-messages').modal();
 };
 
-function errorModalGoBack() {
-    // Disable filter form, re-enable and hightlight creds form
-    enableFilterByTypeForm(false)
-    enableCredsForm(true);
-    $('#section-api-creds').addClass('highlight-form');
-    // Clear message areas
-    clearApiMessageArea();
-    clearLoadLogsMessageArea();
-    // Clear error stack
-    errorStack = [];
+function errorModalGoBack(flowPosition) {
+    // Check if we are listing files of getting files
+    if (flowPosition == "list") {
+        resetPage();
+    } else {
+        changeFilters();
+    }
 }
