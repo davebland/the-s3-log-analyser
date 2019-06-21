@@ -31,7 +31,9 @@
         <header class="row fixed-top align-items-center text-center flex-nowrap">
             <div class="col">Logo1</div>
             <h1 class="col-8">The S3 Log Analyser</h1>
-            <div class="col">Logo2</div>
+            <div class="col">
+                <button type="button" class="btn btn-info btn-lg rounded-circle" data-toggle="modal" data-target="#modal-help">Help..</button>
+            </div>
         </header>
         <!-- Intro Text -->
         <div class="row card m-3">
@@ -55,10 +57,7 @@
                     <p class="text-center"><small>(or load some saved ones if you have been here before)</small></p>
                     <p class="text-justify">You will need to have read access to an S3 bucket, take a look at the help for
                     more information. Credentials are <u>never</u> transmitted to our servers & saved credentials are only stored in your browser.</p>               
-                </div>
-                <div class="m-2 text-center">
-                    <button type="button" class="btn btn-info btn-lg rounded-circle" data-toggle="modal" data-target="#modal-help">Help..</button>
-                </div>                                             
+                </div>                                           
                 <!-- Load Saved Credentials Buttons -->     
                 <div id="buttons-load-saved">
                     <div class="btn-group pb-2 float-lg-left" id="buttons-load-local-saved" role="group">

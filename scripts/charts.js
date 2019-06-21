@@ -4,8 +4,14 @@
     BY DAVID BLAND
 */
 
-/** Setup **/
+/** SETUP **/
 const preferredNumberFormat = d3.format("~s");
+const preferredChartColours = d3.schemeAccent;
+
+// Chart Colours
+dc.config.defaultColors(preferredChartColours);
+
+/** DISPLAY **/
 
 function displayData() {
     // Create crossfilter of data
@@ -44,6 +50,8 @@ function resetChartArea() {
     $('#heading-no-data').show();
     $('#button-change-filter-footer').hide();
 }
+
+/** CHART CREATION **/
 
 // Requests over time line graph
 function chartRequestsOverTime(ndx) {
@@ -125,12 +133,12 @@ function chartRequestsByUserAgent(ndx) {
     let countGroup = userAgentDim.group();
 
     // Create legend
-    let chartLegend = dc.legend().x(0).y(300).autoItemWidth(true).gap(5)
+    let chartLegend = dc.legend().x(0).y(310).autoItemWidth(true).gap(5)
         .legendText(function(d) {
             if (d.name.length < 50) {
                 return d.name;
             } else {
-                return d.name.substr(0,50) + '...';
+                return d.name;//.substr(0,50) + '...';
             }            
         });
 
@@ -170,7 +178,7 @@ function chartBytesSentOverTime(ndx) {
 
     // Get max & min dates (+/-1) plus range of dates between for x axis
     let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
-    let maxDate = dateDim.top(1)[0].TimeDate;
+    let maxDate = d3.timeDay.offset(dateDim.top(1)[0].TimeDate, 1);
 
     // Create graph
     let chart = dc.barChart("#chart-bytes-sent-over-time")
@@ -180,7 +188,8 @@ function chartBytesSentOverTime(ndx) {
         .xUnits(d3.timeDays)
         .xAxisLabel("Time")
         .yAxisLabel("Bytes")
-        .brushOn(false)                
+        .brushOn(false)
+        .colorAccessor(d => d.key)
         .margins({top: 10, right: 50, bottom: 40, left: 50});
     
     
@@ -217,16 +226,17 @@ function chartRequestsByProtocol(ndx) {
     }
 
     // Create graph
-    dc.barChart("#chart-requests-by-protocol")
+    dc.barChart("#chart-requests-by-protocol")        
         .dimension(protocolDim)
         .group(countGroup)
-        .x(d3.scaleOrdinal())
+        .x(d3.scaleBand())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Protocol")
         .valueAccessor(function(d) {
             return d.value.percentage*100;
         })
-        .yAxisLabel("% Requests");
+        .yAxisLabel("% Requests")
+        .colorAccessor(d => d.key);
 }
 
 // File requested by count leaderboard
@@ -257,7 +267,7 @@ function leaderboardFilesByCount(ndx) {
 function leaderboardFilesByTime(ndx) {
     // Create file requested dimension and group by average time to process
     let fileDim = ndx.dimension(dc.pluck('FileRequested'));
-    let countGroup = fileDim.group().reduce(avgAdd,avgRemove,avgInitial);
+    let countGroup = fileDim.group().reduce(avgAdd,avgRemove,avgInitial).order((p) => { return p.avg });
 
     // Time taken averaging functions
     function avgAdd(p, v) {
