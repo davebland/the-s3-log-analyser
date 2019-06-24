@@ -6,7 +6,7 @@
 
 /** SETUP **/
 const preferredNumberFormat = d3.format("~s");
-const preferredChartColours = d3.schemeAccent;
+const preferredChartColours = d3.schemeDark2;
 
 // Chart Colours
 dc.config.defaultColors(preferredChartColours);
@@ -95,7 +95,7 @@ function chartRequestsOverTime(ndx) {
             .yAxisLabel("No. of Requests")        
             .xyTipsOn(true)
             .brushOn(false)
-            .margins({top: 10, right: 50, bottom: 40, left: 50});
+            .margins({top: 10, right: 50, bottom: 45, left: 50});
             
     chart.xAxis().tickFormat(d3.timeFormat("%e %b %y"));
     chart.yAxis().tickFormat(preferredNumberFormat);
@@ -133,7 +133,7 @@ function chartRequestsByUserAgent(ndx) {
     let countGroup = userAgentDim.group();
 
     // Create legend
-    let chartLegend = dc.legend().x(0).y(310).autoItemWidth(true).gap(5)
+    let chartLegend = dc.legend().x(0).y(300).autoItemWidth(true).gap(5)
         .legendText(function(d) {
             if (d.name.length < 50) {
                 return d.name;
@@ -145,7 +145,7 @@ function chartRequestsByUserAgent(ndx) {
     // Create a pie chart
     dc.pieChart("#chart-requests-by-user-agent")
         .width(() => {return $('#chart-requests-by-type').width();})
-        .radius(150)
+        .radius(145)
         .cy(150)
         .height(400)
         .dimension(userAgentDim)
@@ -190,7 +190,7 @@ function chartBytesSentOverTime(ndx) {
         .yAxisLabel("Bytes")
         .brushOn(false)
         .colorAccessor(d => d.key)
-        .margins({top: 10, right: 50, bottom: 40, left: 50});
+        .margins({top: 10, right: 50, bottom: 45, left: 50});
     
     
     chart.xAxis().tickFormat(d3.timeFormat("%e %b %y"));

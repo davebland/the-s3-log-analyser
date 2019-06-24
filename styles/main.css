@@ -3,10 +3,11 @@
 /** Colours **/
 
 body {
-    background-color: lightgrey;
+    background-color: beige;
 }
+
 header {
-    background-color: lightslategray;
+    background-color: cadetblue;
 }
 
 #section-api-creds {
@@ -40,24 +41,32 @@ header {
 }
 
 footer {
-    background-color: lightslategray;
+    background-color: cadetblue;
 }
 
 /** Typography **/
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
     font-size: 3vh;
     font-weight: 600;
     font-variant-caps: petite-caps;
-    font-family: "Lucida Console", Monaco, monospace;
+    font-family: "Arial Black", Gadget, sans-serif;
 }
 
 article h2 {
     text-align: center;
+}
+
+#info-num-files-selected {
+    font-size: 1.5em;
 }
 
 .align-super {
@@ -74,7 +83,7 @@ article h2 {
 
 #app-container {
     margin-top: 12vh;
-    margin-bottom: 10vh;
+    margin-bottom: 15vh;
 }
 
 #message-area-api-connect {
@@ -153,4 +162,5 @@ footer {
 
 .fas {
     font-size: 2em;
+    color: green;
 }

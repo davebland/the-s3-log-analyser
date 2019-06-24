@@ -47,7 +47,6 @@ function enableFilterByTypeForm(yes) {
         $('#fieldset-log-file-type').addClass('border-red');
         //Enable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', false);
-        $('#button-submit-filter-form').prop('disabled', false);
     } else {
         //Disable form fields & buttons
         $('#fieldset-log-file-type :input').prop('disabled', true);
@@ -136,7 +135,7 @@ function resetPage() {
     $('#section-api-creds').addClass('highlight-form');
     $('#section-filter-logs').removeClass('highlight-form');
     // Scroll back to the top of the page
-    $(window).scrollTop();
+    $(window).scrollTop(0);
     // Clear down application wide variablse
     errorStack = [];
     awsObjectList = [];
