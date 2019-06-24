@@ -50,8 +50,10 @@ body {
 }
 
 h1 {
-    font-size: 4vh;
+    font-size: 3vh;
     font-weight: 600;
+    font-variant-caps: petite-caps;
+    font-family: "Lucida Console", Monaco, monospace;
 }
 
 article h2 {
@@ -62,14 +64,16 @@ article h2 {
     vertical-align: super;
 }
 
-/** Container Size, Position and Visability **/
-
-header {
-    height: 6vh;
+@media (min-width: 992px) {
+    h1 {
+        font-size: 4vh;
+    }
 }
 
+/** Container Size, Position and Visability **/
+
 #app-container {
-    margin-top: 7vh;
+    margin-top: 12vh;
     margin-bottom: 10vh;
 }
 
@@ -100,6 +104,13 @@ footer {
 
 #button-change-filter-footer {
     display: none;
+}
+
+@media (min-width: 992px) {
+    #app-container {
+        margin-top: 8.5vh;
+        margin-bottom: 6vh;
+    }
 }
 
 /** Form Styles **/
