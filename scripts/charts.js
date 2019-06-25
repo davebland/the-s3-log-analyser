@@ -230,7 +230,6 @@ function leaderboardFilesByCount(ndx) {
     // Create file requested dimension and group by count of requests
     let fileDim = ndx.dimension(dc.pluck('FileRequested'));
     let countGroup = fileDim.group();
-
     // Create leaderboard
     dc.dataTable("#leaderboard-files-by-count")        
         .dimension(countGroup)

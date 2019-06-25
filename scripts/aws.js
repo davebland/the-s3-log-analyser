@@ -7,10 +7,10 @@
 /* SETUP */
 
 // Application wide variables
-var awsObjectList = [];
-var errorStack = [];
-var s3;
-var dataArray = [];
+let awsObjectList = [];
+let errorStack = [];
+let s3;
+let dataArray = [];
 const listObjectIterationLimit = 4;
 
 // Object Constructor

@@ -7,8 +7,8 @@
 /* SETUP */
 
 // Application wide variables
-var ndx;
-var dateDim;
+let ndx;
+let dateDim;
 
 /* OBJECT LIST FILTERS */
 

@@ -7,7 +7,7 @@
 /* SETUP */
 
 // Application wide variables
-var saveCredsFlag = false;
+let saveCredsFlag = false;
 
 // Disable standard form submit behavour (don't reload page)
 $(document).submit(function(event){
