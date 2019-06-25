@@ -4,6 +4,20 @@
     BY DAVID BLAND
 */
 
+function checkBrowserVersion() {
+    // Check if chrome is in the browser version
+    if (navigator.userAgent.indexOf("Chrome") !== -1) {
+        return;
+    } else {
+        // If not display an error message instead of content
+        $('#app-container>div,section').hide();
+        $('#app-container').append('<h2 class="text-center">Sorry, this browser is not supported, please use Chrome instead.<h2>')
+    }
+}
+
+// Check browser version immediately
+checkBrowserVersion();
+
 function displayErrors(flowPosition) {
     // Empty error modal & reset button
     $('#modal-error-message-area').empty();
