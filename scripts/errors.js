@@ -4,6 +4,8 @@
     BY DAVID BLAND
 */
 
+/* SETUP */
+
 function checkBrowserVersion() {
     // Check if chrome is in the browser version
     if (navigator.userAgent.indexOf("Chrome") !== -1) {
@@ -17,6 +19,8 @@ function checkBrowserVersion() {
 
 // Check browser version immediately
 checkBrowserVersion();
+
+/* ERROR DISPLAY & CONTROLS */
 
 function displayErrors(flowPosition) {
     // Empty error modal & reset button

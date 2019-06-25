@@ -4,29 +4,25 @@
     BY DAVID BLAND
 */
 
+/* SETUP */
+
 // Application wide variables
 var awsObjectList = [];
 var errorStack = [];
 var s3;
 var dataArray = [];
+const listObjectIterationLimit = 4;
 
-// TEST DATA
-var testDataS3 = `acea1d36a41f52c5432d6d490e825a08cdca9707571786b815c557e6940ec384 daveb.me.uk [14/Mar/2019:16:26:37 +0000] 157.55.39.63 - 82BA8AA0D5BA6649 WEBSITE.GET.OBJECT averyaverylongkeynameververylongindex.html "GET / HTTP/1.1" 200 - 195 195 69 69 "-" "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)" - - A4+LRBmK5nKJOwpWhBqCIqrvPhVCXw75oVvyl/xXxfTuo42mk3Lff3Ah/R7V4h3gLeqVQhNsgGs= - - - daveb.me.uk` // TEMP
-var testDataCF = `2019-06-05	12:13:22	SEA19	574	54.212.180.101	GET	d3b19qjblu2xca.cloudfront.net	/	301	-	Go-http-client/1.1	-	-	Redirect	erWxwdksn2n2ozxSVRUk6fotC6hZXI3O4xRuuGrx247HL7uU1t1l5g==	daveb.me.uk	http	92	0.001	-	-	-	Redirect	HTTP/1.1` // TEMP
-parseLogFileContent(testDataS3, 'S3Log');
-parseLogFileContent(testDataCF, 'CloudFront');
-
-// Object Constructors
+// Object Constructor
 function AwsObjectListItem(objectKey) {
     this.objectKey = objectKey;
     this.dateCreated = getListObjectDate(objectKey); // Find date in object key string
     this.type = getListObjectType(objectKey); // CloudFront (.gz) or S3Log
 }
 
-// Enable AWS console logger
-AWS.config.logger = console;
+/* AWS API CALLS */
 
-// Set AWS config and service object globally
+// Set AWS config globally and return service object
 function setupAws(awsCreds) {
     // Set creds awsCreds object
     AWS.config.credentials = new AWS.Credentials({accessKeyId: awsCreds.keyId, secretAccessKey: awsCreds.keySecret});
@@ -39,18 +35,15 @@ function awsListObjects(awsCreds) {
     return new Promise(function(resolve, reject) {
         // Get an s3 service object setup ready to go
         s3 = setupAws(awsCreds);
-
         // Reset object list
         awsObjectList = [];
-
         // Set list loop counter
         let listLoopCounter = 0;
-
         // Create function to call api and list object
         function listObjectLoop(NextContinuationToken) {
             // Set additional S3 parameters including continuation token if available          
             let s3Options = {
-                MaxKeys: 500                            
+                MaxKeys: 1000                            
             };
             if (NextContinuationToken) {
                 s3Options.ContinuationToken = NextContinuationToken;
@@ -64,11 +57,10 @@ function awsListObjects(awsCreds) {
                     // Update the count in the message area
                     updateApiMessageArea(awsObjectList.length);
                     // If there is more results to get (continuation token) and we haven't hit the loop safety limit then re-run listObjectLoop
-                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < 1) {
+                    if (s3ListSuccess.NextContinuationToken && listLoopCounter < listObjectIterationLimit) {
                         listObjectLoop(s3ListSuccess.NextContinuationToken);
                         listLoopCounter++;   
-                    } else {
-                        console.dir(awsObjectList);
+                    } else {                        
                         removeInvalidListObjects() // Remove objects with invalid properties                        
                             .then((removedCount) => {getObjectListStats(removedCount);}) // Get object list stats and update the screen with the information
                             .then(returnPromise())
@@ -78,18 +70,15 @@ function awsListObjects(awsCreds) {
                             })
                     }
                 }).catch(function(s3ListError) {
-                    // If api call fails then add error to stack
-                    console.log(s3ListError);
+                    // If api call fails then add error to stack                    
                     errorStack.push({type: 'AWS API', errorMessage: s3ListError.message, severity: 'fatal'});
                     returnPromise();
                 });
         }
-
         // Invoke listObjectLoop for the first time
         listObjectLoop(null);
-    
-        function returnPromise() {
-            // Check for errors and resolve
+        // Check for errors and resolve
+        function returnPromise() {            
             if (errorStack.length > 0) {
                 reject();
             } else {
@@ -146,16 +135,15 @@ function awsGetObjects(awsGetList) {
                 let errorObject = {type: 'AWS API', errorMessage: errorText, severity: 'fatal'};
                 reject(errorObject);
             });
-
         })            
         // Add the promise to the array
         promiseArray.push(s3GetRequest);
     })
-
     // Track when all promises are complete and use as return
-    console.table(dataArray);
     return Promise.all(promiseArray);
 }
+
+/* LOG FILE PARSING */
 
 // Parse response to JS object & add to dataArray
 function parseLogFileContent(content, type) {

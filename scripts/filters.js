@@ -4,9 +4,13 @@
     BY DAVID BLAND
 */
 
+/* SETUP */
+
 // Application wide variables
 var ndx;
 var dateDim;
+
+/* OBJECT LIST FILTERS */
 
 function getListObjectDate(objectKey) {
     // Find & extract date string in key if exists then convert to date object
@@ -23,14 +27,12 @@ function getListObjectDate(objectKey) {
         } else {
             // If not real add error to stack
             errorStack.push({type: 'List Processing', errorMessage: 'Could not convert to date for key ' + objectKey, severity: 'warning'});
-            console.log('Could not convert to date for key ' + objectKey);
             // Return fail
             return false;
         }
     } else {
         // If not date string found add error to stack
         errorStack.push({type: 'List Processing', errorMessage: objectKey + ' does not contain a valid date string', severity: 'warning'});
-        console.log(objectKey + ' does not contain a valid date string');
         // Return fail
         return false;
     } 
@@ -43,12 +45,11 @@ function getListObjectType(objectKey) {
     } else if (objectKey.slice(-10).indexOf('.') >= 0) { // Filter out common file types (keys which look like extensions .xxx)
         // Add to error stack
         errorStack.push({type: 'List Processing', errorMessage: objectKey + ' has invalid file extension', severity: 'warning'});
-        console.log(objectKey + ' has invalid file extension');
         // Return fail
         return false;
     } else {
         // If none of above assume type S3 Log
-        return "S3Log"
+        return "S3Log";
     }
 }
 
@@ -56,7 +57,6 @@ function removeInvalidListObjects() {
     // For each object in the list, check for invalid (false) properties
     let indexesToRemove = []
     awsObjectList.forEach(function(listItem, index) {
-        console.table(listItem)
         if (!listItem.dateCreated) {
             // Add to remove list if no date
             indexesToRemove.push(index);
@@ -96,9 +96,8 @@ function getObjectListStats(removedCount = 0) {
     awsObjectList.sort((a, b) => a.dateCreated - b.dateCreated);
     // Update min and max date objects
     updateMinMaxDates();
-    // Update display
+    // Update display & return
     displayListStats(objectListStats);
-
     return Promise.resolve();
 }
 
@@ -207,13 +206,3 @@ function changeFilters() {
     clearLoadLogsMessageArea();
     resetFilterForm('ChangeFilter');
 }
-/** Test Data **/
-
-awsObjectList = [
-    {objectKey: "test key1", createdDate: "2012-01-12", type: "s3log"},
-    {objectKey: "test key2", createdDate: "2012-02-12", type: "s3log"},
-    {objectKey: "test key3", createdDate: "2012-03-12", type: "s3log"},
-    {objectKey: "test key4", createdDate: "2012-04-12", type: "s3log"}
-]
-
-//filterListByType().then((dim) => { filterListByDate('min','2012-01-12'); filterListByDate('max','2012-04-12'); });

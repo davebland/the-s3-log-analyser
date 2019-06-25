@@ -4,23 +4,27 @@
     BY DAVID BLAND
 */
 
-/** SETUP **/
+/* SETUP */
+
 const preferredNumberFormat = d3.format("~s");
 const preferredChartColours = d3.schemeDark2;
 
-// Chart Colours
+// Set Chart Colours
 dc.config.defaultColors(preferredChartColours);
 
-/** DISPLAY **/
+// Re-render charts if page width changes
+$(window).resize(function() {
+    dc.renderAll();
+});
+
+/* CHART DISPLAY */
 
 function displayData() {
     // Create crossfilter of data
     let ndx = crossfilter(dataArray);
-
     // Remove holding notice & show chart containers
     $('#heading-no-data').hide();
     $('#section-visualise-data article').show();
-
     // Generate charts
     chartRequestsOverTime(ndx);
     chartRequestsByType(ndx);
@@ -31,19 +35,11 @@ function displayData() {
     // Generate leaderboards
     leaderboardFilesByCount(ndx);
     leaderboardFilesByTime(ndx);
-
     // Scroll to charts
     $(window).scrollTop($('#message-area-load-logs').offset().top - $('header').height());
     // Display charts
     dc.renderAll();
 }
-
-// Re-render charts if page width changes
-$(window).resize(function() {
-    dc.renderAll();
-});
-
-/** RESETS **/
 
 function resetChartArea() {
     $('#section-visualise-data article').hide();
@@ -63,7 +59,7 @@ function chartRequestsOverTime(ndx) {
     let maxDate = dateDim.top(1)[0].TimeDate;
     let timeScale = d3.scaleTime().domain([minDate,maxDate]);
     // Create y points of 0 where data doesn't exist for a given day
-    // *** CODE FROM DC.JS WIKI *** //
+    // *** START OF CODE FROM DC.JS WIKI *** //
     function ensure_group_bins(source_group) {
         var bins = Array.prototype.slice.call(arguments, 1);
         return {
@@ -96,7 +92,7 @@ function chartRequestsOverTime(ndx) {
             .xyTipsOn(true)
             .brushOn(false)
             .margins({top: 10, right: 50, bottom: 45, left: 50});
-            
+    // Customise Axis            
     chart.xAxis().tickFormat(d3.timeFormat("%e %b %y"));
     chart.yAxis().tickFormat(preferredNumberFormat);
 }
@@ -112,11 +108,9 @@ function chartRequestsByType(ndx) {
         } else {
             // If no 2nd . return full operation
             return ndx.Operation;
-        }
-        
+        }        
     });
     let countGroup = operationDim.group();
-
     // Create a pie chart
     dc.pieChart("#chart-requests-by-type")
         .width(() => {return $('#chart-requests-by-type').width();})
@@ -131,7 +125,6 @@ function chartRequestsByUserAgent(ndx) {
     // Create type dimension & group by count
     let userAgentDim = ndx.dimension(dc.pluck('UserAgent'));
     let countGroup = userAgentDim.group();
-
     // Create legend
     let chartLegend = dc.legend().x(0).y(300).autoItemWidth(true).gap(5)
         .legendText(function(d) {
@@ -141,7 +134,6 @@ function chartRequestsByUserAgent(ndx) {
                 return d.name;//.substr(0,50) + '...';
             }            
         });
-
     // Create a pie chart
     dc.pieChart("#chart-requests-by-user-agent")
         .width(() => {return $('#chart-requests-by-type').width();})
@@ -160,7 +152,6 @@ function chartResponseByHttpStatus(ndx) {
     // Create type dimension & group by count
     let httpStatusDim = ndx.dimension(dc.pluck('HttpStatus'));
     let countGroup = httpStatusDim.group();
-
     // Create a pie chart
     dc.pieChart("#chart-response-by-http-status")
         .width(() => {return $('#chart-requests-by-type').width();})
@@ -175,11 +166,9 @@ function chartBytesSentOverTime(ndx) {
     // Create date dimension by day only then group by day and sum bytes sent
     let dateDim = ndx.dimension(function(d) { return d3.timeDay(d.TimeDate)});
     let countGroup = dateDim.group().reduceSum(dc.pluck('BytesSent'));
-
     // Get max & min dates (+/-1) plus range of dates between for x axis
     let minDate = d3.timeDay.offset(dateDim.bottom(1)[0].TimeDate, -1);
     let maxDate = d3.timeDay.offset(dateDim.top(1)[0].TimeDate, 1);
-
     // Create graph
     let chart = dc.barChart("#chart-bytes-sent-over-time")
         .dimension(dateDim)
@@ -191,8 +180,7 @@ function chartBytesSentOverTime(ndx) {
         .brushOn(false)
         .colorAccessor(d => d.key)
         .margins({top: 10, right: 50, bottom: 45, left: 50});
-    
-    
+    // Customise axis
     chart.xAxis().tickFormat(d3.timeFormat("%e %b %y"));
     chart.yAxis().tickFormat(preferredNumberFormat);
 }
@@ -209,7 +197,6 @@ function chartRequestsByProtocol(ndx) {
         }
     });
     let countGroup = protocolDim.group().reduce(percentageAdd, percentageRemove, percentageInitial);
-
     // Reduce to percentage functions
     function percentageAdd(p, v) {
         p.count++;
@@ -224,7 +211,6 @@ function chartRequestsByProtocol(ndx) {
     function percentageInitial(p, v) {        
         return {count: 0, percentage: 0};
     }
-
     // Create graph
     dc.barChart("#chart-requests-by-protocol")        
         .dimension(protocolDim)
@@ -268,7 +254,6 @@ function leaderboardFilesByTime(ndx) {
     // Create file requested dimension and group by average time to process
     let fileDim = ndx.dimension(dc.pluck('FileRequested'));
     let countGroup = fileDim.group().reduce(avgAdd,avgRemove,avgInitial).order((p) => { return p.avg });
-
     // Time taken averaging functions
     function avgAdd(p, v) {
         p.count++;
@@ -290,10 +275,8 @@ function leaderboardFilesByTime(ndx) {
     function avgInitial() {
         return {avg: 0, count: 0, total: 0};
     }
-
     // Formatter for 1 decimal place
-    OneDecimalPlace = d3.format(".1~f")
-
+    let OneDecimalPlace = d3.format(".1~f");
     // Create leaderboard
     dc.dataTable("#leaderboard-files-by-time")        
         .dimension(countGroup)

@@ -4,6 +4,8 @@
     BY DAVID BLAND
 */
 
+/* SETUP */
+
 // Application wide variables
 var saveCredsFlag = false;
 
@@ -16,7 +18,6 @@ $(document).submit(function(event){
 checkSavedCredsButtonState();
 getAwsRegions();
 $('#message-area-load-logs').hide();
-
 
 /* FORM DISPLAY */
 
@@ -136,7 +137,7 @@ function resetPage() {
     $('#section-filter-logs').removeClass('highlight-form');
     // Scroll back to the top of the page
     $(window).scrollTop(0);
-    // Clear down application wide variablse
+    // Clear down application wide variables
     errorStack = [];
     awsObjectList = [];
     ndx = 0;
@@ -207,15 +208,12 @@ function getAwsRegions() {
 function submitCredsForm(formCreds) {
     // Clear error stack
     errorStack = [];
-    
     // Disable creds form and un-highlight whilst processing
     enableCredsForm(false);
     $('#section-filter-logs').removeClass('highlight-form');
-
     // Show message area & add message
     $('#message-area-api-connect').show();
     $('#message-area-api-connect-loading').append('Loading...');
-
     // Create object holding AWS Creds
     let awsCreds = {
         awsRegion: formCreds.awsRegion.value,
@@ -223,8 +221,6 @@ function submitCredsForm(formCreds) {
         keySecret: formCreds.keySecret.value,
         bucketName: formCreds.bucketName.value
     }
-    console.table(awsCreds);
-
     // Invoke function to list objects and handle promise
     awsListObjects(awsCreds).then(function(success) {
             // Update message area & show instruction
@@ -241,10 +237,8 @@ function submitCredsForm(formCreds) {
             // Call error display function
             displayErrors('list');                    
         });
-
-    // Save creds
+    // Save creds & return
     saveCreds(awsCreds);
-
     return false;
 }
 
@@ -278,7 +272,6 @@ function submitFilterForm() {
         // Call error display function
         displayErrors('get');
     });
-
     return false; 
 }
 
