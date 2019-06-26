@@ -11,7 +11,7 @@ let awsObjectList = [];
 let errorStack = [];
 let s3;
 let dataArray = [];
-const listObjectIterationLimit = 4;
+const listObjectIterationLimit = 9;
 
 // Object Constructor
 function AwsObjectListItem(objectKey) {
@@ -102,7 +102,6 @@ function awsGetObjects(awsGetList) {
     // Create an array of promises (one for each file to be retrieved)
     let promiseArray = [];
     awsGetList.forEach(function(listItem) {
-        console.log('Requesting: ' + listItem.objectKey);
         // Set additional S3 parameters including responsetype header for CloudFront .gz object          
         let s3Options = {
             Key: listItem.objectKey                         

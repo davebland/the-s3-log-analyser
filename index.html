@@ -58,21 +58,22 @@
             <section id="section-api-creds" class="col-11 col-lg-5 m-2 py-2 rounded highlight-form">                
                 <h2 class="text-center">Connect to an S3 Bucket</h2>
                 <div class="mb-0">
-                    <p class="text-center mb-0"><strong class="align-super">Enter AWS credentials below </strong><i class="fas fa-chevron-circle-down"></i></p>
-                    <p class="text-center"><small>(or load some saved ones if you have been here before)</small></p>
-                    <p class="text-justify">You will need to have read access to an S3 bucket, take a look at the help for
-                    more information. Credentials are <u>never</u> transmitted to our servers & saved credentials are only stored in your browser.</p>               
+                    <p class="text-center mb-0"><strong class="align-super">Enter AWS credentials below </strong><i class="fas fa-chevron-circle-down"></i> <small class="align-super">(or load some saved ones if you have been here before)</small></p>
+                    <p class="text-center"></p>
+                    <p class="text-justify">You will need to have permission to make GET requests to the bucket, take a look at the help for
+                    more information. Credentials are <u>never</u> transmitted to our servers & saved credentials are only stored in your browser. To prevent your browser becoming
+                    unresponsive only the <strong>first 10,000</strong> objects in the bucket will be processed.</p>               
                 </div>                                           
                 <!-- Load Saved Credentials Buttons -->     
                 <div id="buttons-load-saved">
-                    <div class="btn-group pb-2 float-lg-left" id="buttons-load-local-saved" role="group">
+                    <div class="btn-group mb-3 float-lg-left" id="buttons-load-local-saved" role="group">
                         <button type="button" class="btn btn-secondary" onclick="loadSavedCreds();" disabled>Load Saved</button>
                         <button type="button" class="btn btn-danger" onclick="clearSavedCreds();" disabled><small>Clear</small></button>                         
                     </div>
-                    <button class="btn btn-warning float-right mb-2" onclick="loadDemoCredentials();">Use DEMO Creds</button>
+                    <button class="btn btn-warning float-right mb-3" onclick="loadDemoCredentials();">Use DEMO Creds</button>
                 </div>                                             
                 <!-- Enter AWS Credentials Form -->
-                <form id="form-api-creds" class="mt-3" onsubmit="return submitCredsForm(this);">
+                <form id="form-api-creds" class="" onsubmit="return submitCredsForm(this);">
                     <div class="form-group">                            
                         <input type="text" class="form-control form-control-lg" id="access-key-id" name="keyId" aria-describedby="key-id-help" placeholder="Access Key ID" required>
                         <small id="key-id-help" class="form-text text-muted">Your AWS API Key ID</small>
@@ -86,11 +87,11 @@
                             <select class="form-control" id="aws-region-select" name="awsRegion" aria-describedby="aws-region-help" required>
                                 <!-- Options added by JS -->
                             </select>
-                            <small id="aws-region-help" class="form-text text-muted">Region in which your S3 bucket is hosted.</small>
+                            <small id="aws-region-help" class="form-text text-muted">Region in which your S3 bucket is hosted</small>
                         </div>
                         <div class="col">
                             <input type="text" class="form-control" id="bucket-name" name="bucketName" aria-describedby="bucket-name-help" placeholder="Bucket Name" required>
-                            <small id="bucket-name-help" class="form-text text-muted">Name of the bucket containing the log files.</small>
+                            <small id="bucket-name-help" class="form-text text-muted">Name of the bucket containing the log files</small>
                         </div>                            
                     </div>
                     <div class="row align-items-center justify-content-end">
@@ -161,7 +162,7 @@
                     </fieldset>          
                     <div class="row align-items-center my-3">                        
                         <div class="col text-right"><small><i class="fas fa-chevron-circle-down"></i></small></div>
-                        <div class="col-6 text-center"><small>Now select a date range or use the presets</small></div>
+                        <div class="col-6 text-center"><small>Then select a date range or use the presets</small></div>
                         <div class="col"><small><i class="fas fa-chevron-circle-down"></i></small></div>                    
                     </div>
                     <div class="row">
@@ -170,12 +171,12 @@
                             <div class="form-group">
                                 <label class="form-text text-muted" for="date-min">From:</label>
                                 <input class="form-control" type="date" name="date-min" id="date-min" min="" max="" oninput="filterListByDate();" disabled>
-                                <p class="text-right"><small >Earliest: <span id="info-date-min"><!-- JS Inserts --></span></small></p> 
+                                <p class="text-right"><small>Earliest: <span id="info-date-min"><!-- JS Inserts --></span></small></p> 
                             </div>
                             <div class="form-group">
                                 <label class="form-text text-muted" for="date-max">To:</label>                                                    
                                 <input class="form-control" type="date" name="date-max" id="date-max" min="" max="" oninput="filterListByDate();" disabled>
-                                <p class="text-right"><small >Latest: <span id="info-date-max"><!-- JS Inserts --></span></small></p> 
+                                <p class="text-right"><small>Latest: <span id="info-date-max"><!-- JS Inserts --></span></small></p> 
                             </div>                                                   
                         </fieldset>
                         <fieldset id="fieldset-log-file-presets" class="col form-group border mx-2">
@@ -202,7 +203,7 @@
                     </div>
                     <div class="row align-items-center justify-content-between">
                         <div class="col">
-                            <div class="badge badge-pill badge-info p-3">
+                            <div class="badge badge-pill badge-info py-1 px-3">
                                 <table>
                                     <tr>
                                         <td>Log Files<br>Selected</td>
@@ -336,58 +337,58 @@
                         ‘User Request Logs’ for a CloudFront distribution.</p>
                     <p>The tool retrieves log files stored in a single S3 bucket and does NOT modify the logs in any way. Once retrieved, the log files are parsed into 
                         a data set and visualised by way of chart and tables. Each visualisation has a title to explain what dimension of the data is being displayed.</p>
-                    <p>A demonstration data set it available by selecting ‘Use Demo Creds’ – the credentials form will be pre-populated along with details 
+                    <p>A demonstration data set it available by selecting <em>Use Demo Creds</em> which will cause the credentials form to be pre-populated with details 
                         of a bucket containing real log files. Proceed as per the below instructions to view the demo data.</p>
                     <p>Currently, The S3 Log Analyser is confirmed to <strong>work only in Chrome Browser version 75 and above.</strong></p>
                     <h6><u><strong>Using The S3 Log Analyser</strong></u></h6>
                     <ol class="text-justify">
                         <li>
                             <p>Ensure you have a minimum of one log file available and stored in an S3 bucket. The log files can be either automatically 
-                            generated in the bucket by AWS or manually transferred there by other means (so long as the format or key name have not been changed).</p>
+                            generated in the bucket by AWS or manually transferred there by other means (so long as the format and key name have not been changed).</p>
                             <p class="text-center"><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html" target="_blank" class="badge badge-info">Setting up S3 Server Access Logging <i class="fas fa-external-link-alt"></i></a></p>
                             <p class="text-center"><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html" target="_blank" class="badge badge-info">Setting up CloudFront Logging <i class="fas fa-external-link-alt"></i></a></p>
                         </li>
                         <li>
                             <p>Create an AWS user that has programmatic access to the S3 bucket containing the log files. The user must have permission to perform 
                             both <mark>ListBucket</mark> and <mark>GetObject</mark> actions on the bucket in question. We strongly suggest that for the purposes of using this tool you 
-                            create a dedicated user using IAM console whose permissions are limited ONLY to those above.</p>
+                            create a dedicated user via IAM console whose permissions are limited ONLY to those above.</p>
                             <p class="text-center"><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html" target="_blank" class="badge badge-info">AWS User Management <i class="fas fa-external-link-alt"></i></a></p>
                             <p>Create an Access Key for the user and note the key secret.</p>
                         </li>
                         <li>
                             <p>On The S3 Log Analyser enter the access key and secret from step 2 as well as selecting the region in which the bucket is hosted and 
-                            the exact bucket name.</p>
-                            <p>Use either ‘connect’ button to initiate a connection with AWS. If you do not wish your AWS credentials to be saved locally in your browser 
-                            select ‘Connect without saving credentials in browser’.</p>
+                            inputting the exact bucket name.</p>
+                            <p>Use either <em>Connect</em> button to initiate a connection with AWS. If you do not wish your AWS credentials to be saved locally in your browser 
+                            select <em>Connect without saving credentials in browser</em>.</p>
                         </li>
                         <li>
                             <p>If connection has been successful and log files have been found in the bucket then The S3 Log Analyser will present some stats on the 
-                            number of each type of log file found. You will now be able to move on to filtering by date in step 5.</p>
-                            <p>If connection has not been successful or there have been issues finding the log files then a relevant error message will be presented. 
+                            number and type of each log file found. You will now be able to move on to filtering the logs in step 5.</p>
+                            <p>If connection has not been successful or there have been issues locating log files then a relevant error message will be presented. 
                             Provided none of the errors are fatal then you will be able to continue.</p>
                         </li>
                         <li>
                             <p>The S3 Log Analyser allows you filter the log files found by date. This permits you to visualise a particular date range that you may be 
                             interested in. Start the filtering process by selecting which type of log file you would like to view, then either select a date range 
-                            or use a preset filter. To change the filter simply click ‘reset filter’ at any time. The number of log files that are to be loaded will 
-                            appear beneath the form. Click ‘Load & Display’ when you are ready to visualise the data.</p>
-                            <p>To view all the log files found simply select the type and click ‘Load & Display’ without setting a date filter.</p>                    
-                            <p><em>** When you click ‘Load & Display’ The S3 Log Analyser will fetch each of the log files from the bucket and interpret them. This may take 
+                            or use a preset filter. To change the filter simply click <em>Reset Filter</em> at any time. The number of log files that are to be loaded will 
+                            appear beneath the form. Click <em>Load & Display</em> when you are ready to visualise the data.</p>
+                            <p>To view all the log files found simply select the type and click <em>Load & Display</em> without setting a date filter.</p>                    
+                            <p><em>** When you click </em>Load & Display<em>, The S3 Log Analyser will fetch each of the log files from the bucket and interpret them. This may take 
                             some time, particularly for very large data sets. In addition, CloudFront Access Logs will take longer to load than S3 Access Logs due to 
                             the way they are compressed. **</em></p>
                         </li>
                         <li>
                             <p>Once the log files are loaded the charts and tables will appear below the form elements. Browse through them to get an insight into the 
-                            content of the logs. Pie chart segments can be clicked to dynamically filter all the charts and tables according to the selected 
+                            content of the logs. Pie chart segments can be clicked on to dynamically filter all the charts and tables according to the selected 
                             segment. Click again on the segment to clear the filter or click another segment to filter again.</p>
                         </li>
                     </ol>
-                    <p>To change the date filter whilst keeping your current AWS connection click the ‘Change filter’ button above the charts or the in the page 
-                        footer. To reset The S3 Log Analyser simply hit Reset in the footer at any time.</p>
+                    <p>To change the date filter whilst keeping your current AWS connection click the <em>Change Filter</em> button above the charts or the in the page 
+                        footer. To reset The S3 Log Analyser simply hit <em>Reset</em> in the footer at any time.</p>
                     <p>NB. Objects in the bucket containing the log files do not need to be publicly accessible but the bucket itself must permit the authorized 
                         user to make GET requests from any origin.</p>
                         
-                    <p>For further help contact <a href="mailto:the-s3-log-analyser@daveb.me.uk"><strong>the-s3-log-analyser@daveb.me.uk</strong></a></p>
+                    <p class="text-center">For further help contact <a href="mailto:the-s3-log-analyser@daveb.me.uk"><strong>the-s3-log-analyser@daveb.me.uk</strong></a></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>

@@ -47,6 +47,7 @@ Currently the app supports 2 of AWS's log file types, see the site's help modal 
 - Compatibility with other browsers
 - Modify the date filter according to log type selected
 - Visualise bar & line chart data in smaller increments than 1 day
+- Change x-axis tick orientation according to number of ticks to prevent overlap
 
 ## Technologies
 

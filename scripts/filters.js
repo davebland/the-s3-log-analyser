@@ -102,20 +102,25 @@ function getObjectListStats(removedCount = 0) {
 }
 
 function updateMinMaxDates() {
-    // Get max & min date object (start and end of array)
-    let maxDate = awsObjectList[awsObjectList.length - 1]['dateCreated'];
-    let minDate = awsObjectList[0]['dateCreated'];
-    // Set form elements to reflect min and max dates
-    let dateFormat = d3.timeFormat('%Y-%m-%d');
-    $('#info-date-max').text(maxDate.toDateString());
-    $('#date-max').attr('min', dateFormat(minDate));
-    $('#date-max').attr('max', dateFormat(maxDate));
-    $('#date-max').val(dateFormat(maxDate));
-    $('#info-date-min').text(minDate.toDateString());
-    $('#date-min').attr('min', dateFormat(minDate));
-    $('#date-min').attr('max', dateFormat(maxDate));
-    $('#date-min').val(dateFormat(minDate));
-    return;
+    // Check if there are items in the object list
+    if (awsObjectList.length > 0) {
+        // Get max & min date object (start and end of array)
+        let maxDate = awsObjectList[awsObjectList.length - 1]['dateCreated'];
+        let minDate = awsObjectList[0]['dateCreated'];
+        // Set form elements to reflect min and max dates
+        let dateFormat = d3.timeFormat('%Y-%m-%d');
+        $('#info-date-max').text(maxDate.toDateString());
+        $('#date-max').attr('min', dateFormat(minDate));
+        $('#date-max').attr('max', dateFormat(maxDate));
+        $('#date-max').val(dateFormat(maxDate));
+        $('#info-date-min').text(minDate.toDateString());
+        $('#date-min').attr('min', dateFormat(minDate));
+        $('#date-min').attr('max', dateFormat(maxDate));
+        $('#date-min').val(dateFormat(minDate));
+        return;
+    } else {
+        return;
+    }
 }
 
 function displayListStats(objectListStats) {
