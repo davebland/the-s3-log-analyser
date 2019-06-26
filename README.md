@@ -12,7 +12,7 @@ Remote IP addresses in the access logs are ignored to anonymise the data. All pr
 
 See [https://daveb.me.uk/the-s3-log-analyser/]. A demo is available by clicking on the 'Use DEMO Creds' button to load access credentials for an S3 bucket containing example log files. *NB hosting the source code locally will mean DEMO creds may not load correctly, use the demo site to avoid this.
 
-Currently the app only works in Chrome browser as Firefox (and others untested) do not support the required regex 'look behind' assertion. Basic browser detection implemented to prevent use in none Chrome based browsers.
+Currently the app only works in Chrome browser as Firefox (and others untested) do not support the required regex 'look behind' assertion. Basic regex assertion compatibility checking implemented to to prevent use in Firefox & Edge browsers.
 
 ## UX
 

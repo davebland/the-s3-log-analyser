@@ -227,7 +227,10 @@
                 <span class="spinner-border mr-2" role="status"></span><!--JS-->
             </div>
             <div class="col text-center">
-                Logs Loaded: <span id="message-area-load-logs-counter">0<!-- JS --></span>
+                <div class="badge badge-pill badge-info p-2">
+                    Logs Loaded:
+                    <span id="message-area-load-logs-counter">0<!-- JS --></span>
+                </div>
             </div>
             <div class="col text-right">
                 <button type="button" class="btn btn-warning" onclick="changeFilters();">Change Filter</button>
@@ -241,7 +244,8 @@
             <!-- Chart Intro Text -->
             <article class="row card m-3">
                 <div class="card-body pb-0">
-                    <p class="text-justify text-lg-center"><strong>Congratulations, we have retrieved some data to show!</strong> Browse the charts and tables below for an insight into access patterns over the time 
+                    <p class="text-center"><strong>Congratulations, we have retrieved some data to show!</strong></p>
+                    <p class="text-justify text-lg-center">Browse the charts and tables below for an insight into access patterns over the time 
                         period selected. Use the pie charts to dynamically filter all the displays by clicking on segment of interest. Click the segment again to 
                         clear your selection. Change the date filter or reset the page using the buttons supplied.</p>
                 </div>

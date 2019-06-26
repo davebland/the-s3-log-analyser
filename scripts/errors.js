@@ -18,7 +18,7 @@ function checkIfRegexSupported() {
     }
 }
 
-// Check browser version immediately
+// Check regex compatibility immediately
 checkIfRegexSupported();
 
 /* ERROR DISPLAY & CONTROLS */

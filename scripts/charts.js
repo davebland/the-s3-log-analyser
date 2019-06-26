@@ -37,7 +37,7 @@ function displayData() {
     // Generate protocol chart last to ensure correct height
     chartRequestsByProtocol(ndx);
     // Scroll to charts
-    $(window).scrollTop($('#message-area-load-logs').offset().top - $('header').height());
+    $(window).scrollTop($('#message-area-load-logs').offset().top - $('header').outerHeight() - 10);
     // Display charts
     dc.renderAll();
 }

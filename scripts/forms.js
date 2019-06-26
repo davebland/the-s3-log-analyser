@@ -109,7 +109,8 @@ function clearApiMessageArea() {
 // Reset & hide Load Logs message area
 function clearLoadLogsMessageArea() {
     $('#message-area-load-logs-loading').html('<span class="spinner-border mr-2" role="status"></span>');
-    $('#message-area-load-logs').hide();
+    $('#message-area-load-logs-counter').text(0);
+    $('#message-area-load-logs').hide();    
 }
 
 /* RESETS */
@@ -211,9 +212,10 @@ function submitCredsForm(formCreds) {
     // Disable creds form and un-highlight whilst processing
     enableCredsForm(false);
     $('#section-filter-logs').removeClass('highlight-form');
-    // Show message area & add message
+    // Show message area, add message & scroll to if required
     $('#message-area-api-connect').show();
     $('#message-area-api-connect-loading').append('Loading...');
+    $(window).scrollTop($('#message-area-api-connect').offset().top - 100);
     // Create object holding AWS Creds
     let awsCreds = {
         awsRegion: formCreds.awsRegion.value,

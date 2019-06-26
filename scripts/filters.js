@@ -205,4 +205,6 @@ function changeFilters() {
     resetChartArea();
     clearLoadLogsMessageArea();
     resetFilterForm('ChangeFilter');
+    // Scroll to filter form
+    $(window).scrollTop($('#section-filter-logs').offset().top - 100);
 }
