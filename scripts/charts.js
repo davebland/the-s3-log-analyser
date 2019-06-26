@@ -30,11 +30,12 @@ function displayData() {
     chartRequestsByType(ndx);
     chartRequestsByUserAgent(ndx);
     chartResponseByHttpStatus(ndx);
-    chartBytesSentOverTime(ndx);
-    chartRequestsByProtocol(ndx);
+    chartBytesSentOverTime(ndx);    
     // Generate leaderboards
     leaderboardFilesByCount(ndx);
     leaderboardFilesByTime(ndx);
+    // Generate protocol chart last to ensure correct height
+    chartRequestsByProtocol(ndx);
     // Scroll to charts
     $(window).scrollTop($('#message-area-load-logs').offset().top - $('header').height());
     // Display charts

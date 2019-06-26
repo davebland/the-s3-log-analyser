@@ -6,19 +6,20 @@
 
 /* SETUP */
 
-function checkBrowserVersion() {
-    // Check if chrome is in the browser version
-    if (navigator.userAgent.indexOf("Chrome") !== -1) {
-        return;
-    } else {
-        // If not display an error message instead of content
+function checkIfRegexSupported() {
+    // Check if regex lookbehind assertion causes error
+    try {
+        let test = new RegExp('(?<= "[^"]*) (?=[^"]*" )');
+    } 
+    catch(e) {
+        // If error then browser not supported so display an error message instead of content
         $('#app-container>div,section').hide();
-        $('#app-container').append('<h2 class="text-center">Sorry, this browser is not supported, please use Chrome instead.<h2>')
+        $('#app-container').append('<h2 class="text-center">Sorry, this browser is not supported, please use Chrome instead.<h2>');
     }
 }
 
 // Check browser version immediately
-checkBrowserVersion();
+checkIfRegexSupported();
 
 /* ERROR DISPLAY & CONTROLS */
 
