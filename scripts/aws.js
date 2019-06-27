@@ -173,7 +173,6 @@ function parseLogFileContent(content, type) {
                     HttpStatus: +d[9],
                     BytesSent: convertToNumber(d[11]),
                     TotalTime: +d[13],
-                    Referrer: d[15],
                     UserAgent: d[16],
                     Protocol: d[20]
                 };
@@ -191,14 +190,13 @@ function parseLogFileContent(content, type) {
             // Assume CloudFront if not S3
             parseResult = d3.tsvParseRows(content, function(d, i) {             
                 return {
-                    // Correct type on other values as we go
+                    // Correct type on values as we go
                     TimeDate: new Date(`${d[0]} ${d[1]}`),
                     Operation: d[5],
                     FileRequested: d[7],
                     HttpStatus: +d[8],
                     BytesSent: +d[3],
                     TotalTime: +d[17],
-                    Referrer: d[9],
                     UserAgent: d[10],
                     Protocol: d[21],
                 } 

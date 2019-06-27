@@ -22,6 +22,8 @@ The purpose of the application is to provide a quick and easy way for a user to 
 
 Currently the app supports 2 of AWS's common log file types, see the site's help modal for more information. Users need to choose between whether they would like to view S3 Access Logs OR CloudFront Access Logs as the two types will often represent the same information (i.e. if the user is logging CloudFront requests to a site hosted in the bucket as well as bucket access).
 
+The application is usable on all device sizes although is primarily designed for desktop viewing.
+
 ### User Stories
 
 1. Correct user interaction flow is enforced by input elements being disabled/enabled at the right times. It is not possible to break the application by clicking a button out of sequence.
@@ -33,6 +35,7 @@ Currently the app supports 2 of AWS's common log file types, see the site's help
 7. Where data values are missing in the log files, these are presented gracefully on the charts.
 8. If a S3 bucket contains incorrectly formatted log files the application fails gracefully with a relevant error message.
 9. Large data sets load fast enough to be usable.
+10. The site must work acceptably on all device sizes.
 
 ## Features
 
@@ -95,6 +98,7 @@ After considering using an automated testing library I decided against this as i
 7. Added code to the log file parsing functions to interpret '-' (AWS no data indicator) as 0 or ignored in the charts. Implemented charting functions to create ‘0’ data points for dates in the requested range where no log files exist.
 8. Tested extensively with dummy objects names and content to ensure that invalid log files are ignored, and the user informed via error reporting modal. 
 9. Experimented with listing and retrieving several 1000 log files from test data and as a result implemented safety limit of 10,000 objects. Retrieval of 1000+ objects is relatively slow (20s+) but the user gets feedback in the form of a counter so this is acceptable.
+10. Tested site on a variety of device sizes using browser development tools. Design is responsive, largely using Bootstrap library functions and grid layout. Adjusted formatting of charts and tables so they are rendered in a usable size on smaller devices. Added function to re-draw charts when device size changes (i.e. a user resizes the window).
 
 ## Deployment
 
