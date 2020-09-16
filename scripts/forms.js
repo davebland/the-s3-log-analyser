@@ -323,7 +323,7 @@ function loadDemoCredentials() {
         $('#access-key-secret').val(secret);
     });
     // Input other creds data into form fields
-    $('#access-key-id').val('AKIASVQN7V6SIMIAYWHC');
-    $('#aws-region-select').val('eu-west-2');
+    $('#access-key-id').val('AKIA3EKD7RSAZQWCO6GX');
+    $('#aws-region-select').val('eu-west-1');
     $('#bucket-name').val('demo.the-s3-log-analyser');
 }
