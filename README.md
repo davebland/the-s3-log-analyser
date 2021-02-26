@@ -10,7 +10,7 @@ Remote IP addresses in the access logs are ignored to anonymise the data. All pr
 
 ## Demo
 
-See https://daveb.me.uk/the-s3-log-analyser/.
+See https://daveb.me.uk/the-s3-log-analyser/[https://daveb.me.uk/the-s3-log-analyser/index.html].
 
 A demo data set is available by clicking on the 'Use DEMO Creds' button to load access credentials for an S3 bucket containing example log files. * Please note - hosting the source code locally will mean DEMO Creds may not load correctly, use the link above to avoid this.
 
